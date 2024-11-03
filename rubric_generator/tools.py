@@ -9,7 +9,6 @@ from docx import Document
 from requests.exceptions import HTTPError
 from io import BytesIO
 import requests
-from app.services.logger import setup_logger
 from langchain_groq import ChatGroq
 import requests
 import os
@@ -22,8 +21,6 @@ from reportlab.lib.pagesizes import letter
 from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph
 from reportlab.lib.styles import getSampleStyleSheet
 from pathlib import Path
-
-logger = setup_logger(__name__)
 
 model_name = 'llama-3.1-70b-versatile'
 # Entire syllabus generator pipeline with all functions in this class
