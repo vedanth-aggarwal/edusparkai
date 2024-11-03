@@ -4,3 +4,5 @@ assemblyai
 youtube-transcript-api
 groq
 moviepy
+python-docx
+pypdf2
