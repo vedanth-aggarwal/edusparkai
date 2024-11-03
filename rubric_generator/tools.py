@@ -26,11 +26,12 @@ model_name = 'llama-3.1-70b-versatile'
 # Entire syllabus generator pipeline with all functions in this class
 class RUBRIC:
 
-    def __init__(self,grade,points, standard, assignment,path=""):
+    def __init__(self,grade,points, standard, assignment,file,path=""):
         self.grade = grade
         self.points = points
         self.standard = standard
         self.assignment = assignment
+        self.file = file
         self.path = path
         self.model = ChatGroq(model=model_name,temperature=0.3,api_key="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")
 
@@ -101,14 +102,14 @@ class RUBRIC:
         else:
             raise Exception(f"Unsupported file type: {content_type}. Unable to extract content.")
         
-    def extract_content_from_file(self, file_path):
+    def extract_content_from_file(self, file_path,file):
         """Determines file type and extracts content accordingly."""
         if file_path.endswith('.pdf'):
-            return self.extract_text_from_pdf(file_path)
+            return self.extract_text_from_pdf(file)
         elif file_path.endswith('.docx'):
-            return self.extract_text_from_docx(file_path)
+            return self.extract_text_from_docx(file)
         elif file_path.endswith('.txt'):
-            return self.extract_text_from_txt(file_path)
+            return self.extract_text_from_txt(file)
         else:
             raise Exception("Unsupported file type. Only .pdf, .docx, and .txt are supported.")
     
@@ -178,7 +179,7 @@ class RUBRIC:
         prompt_path = current_dir / 'prompt.txt'
         prompt = self.build_prompt(prompt_path)
         chain = prompt | self.model
-        assignment_content = self.extract_content_from_file(self.assignment)
+        assignment_content = self.extract_content_from_file(self.assignment,file)
         print(assignment_content)
         response = chain.invoke(
                         {

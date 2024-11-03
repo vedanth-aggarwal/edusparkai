@@ -45,7 +45,7 @@ if submitted:
             # Initialize the RUBRIC generator and run it
             #if assignment_url is None:
             #    assignment_url = file
-            gen = RUBRIC(grade, points, standard, saved_file_path)
+            gen = RUBRIC(grade, points, standard, saved_file_path, file)
             result = gen.run()
 
             # Display result and generated PDF
