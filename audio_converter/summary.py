@@ -1,5 +1,7 @@
 import os
 from groq import Groq
+from pathlib import Path
+
 
 class LLM:
      
@@ -12,7 +14,14 @@ class LLM:
         self.prompt()
           
     def prompt(self):
-         with open('../summary_prompt.txt', 'r') as file:
+         # Get the directory of the current file (transcribe.py)
+        current_dir = Path(__file__).parent
+
+            # Construct the full path to summary.py
+        summary_path = current_dir / 'summary_prompt.txt'
+
+        print("Full path to summary.py:", summary_path)
+        with open(summary_path, 'r') as file:
             self.prompt_text = file.read()
 
     #def transcript(self):
