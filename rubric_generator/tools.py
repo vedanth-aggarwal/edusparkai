@@ -26,6 +26,13 @@ class RUBRIC:
         """Reads text from a file."""
         with open(filepath, 'r', encoding='utf-8') as file:
             return file.read()
+    
+    def build_prompt(self,filepath):
+        # build invididual promps for each sub part of syllabus
+        template = self.read_text_file(filepath)
+
+        prompt = PromptTemplate.from_template(template)
+        return prompt
 
     def extract_text_from_txt(self, file_path):
         """Extracts text from a TXT file."""
@@ -104,11 +111,27 @@ class RUBRIC:
         """Main execution function to generate the rubric."""
         assignment_content = self.extract_content_from_file(self.assignment_path)  # Use file path directly
         print(assignment_content)
+
+        # Important study resources and their specific function
+        current_dir = Path(__file__).parent
+        prompt_path = current_dir / 'prompt.txt'
+        prompt = self.build_prompt(prompt_path)
+        chain = prompt | self.model
+        response = chain.invoke(
+                        {
+                            'grade' : self.grade,
+                            'points':self.points,
+                            'assignment' : assignment_content,
+                            'standard':self.standard
+                        })
+        print(response.content)
+        response = self.validator(response.content)
+        
         
         # Here you can implement your prompt building and model invocation logic...
         # response = chain.invoke(...)
         
         # Placeholder for response handling, adjust this according to your logic
-        response = {}  # Replace with actual response from model invocation
+        #response = {}  # Replace with actual response from model invocation
         self.genpdf(response)
         return response
