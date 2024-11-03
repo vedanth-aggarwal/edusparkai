@@ -179,7 +179,7 @@ class RUBRIC:
         prompt_path = current_dir / 'prompt.txt'
         prompt = self.build_prompt(prompt_path)
         chain = prompt | self.model
-        assignment_content = self.extract_content_from_file(self.assignment,file)
+        assignment_content = self.extract_content_from_file(self.assignment,self.file)
         print(assignment_content)
         response = chain.invoke(
                         {
