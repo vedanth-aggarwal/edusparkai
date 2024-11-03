@@ -100,6 +100,17 @@ class RUBRIC:
             return self.extract_text_from_txt(file_content)
         else:
             raise Exception(f"Unsupported file type: {content_type}. Unable to extract content.")
+        
+    def extract_content_from_file(self, file_path):
+        """Determines file type and extracts content accordingly."""
+        if file_path.endswith('.pdf'):
+            return self.extract_text_from_pdf(file_path)
+        elif file_path.endswith('.docx'):
+            return self.extract_text_from_docx(file_path)
+        elif file_path.endswith('.txt'):
+            return self.extract_text_from_txt(file_path)
+        else:
+            raise Exception("Unsupported file type. Only .pdf, .docx, and .txt are supported.")
     
     def genpdf(self,rubric_data):
                 # Create a PDF document
@@ -159,8 +170,6 @@ class RUBRIC:
         elements = [table]
         pdf.build(elements)
 
-       
-
         print(f"PDF created successfully at {pdf_file}")
 
     def run(self):
@@ -169,7 +178,7 @@ class RUBRIC:
         prompt_path = current_dir / 'prompt.txt'
         prompt = self.build_prompt(prompt_path)
         chain = prompt | self.model
-        assignment_content = self.extract_content_from_url(self.assignment)
+        assignment_content = self.extract_content_from_file(self.assignment)
         print(assignment_content)
         response = chain.invoke(
                         {

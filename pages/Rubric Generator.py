@@ -1,8 +1,21 @@
 # Streamlit-based UI Code
+
+import streamlit as st
+import os
+
+# Function to save uploaded file temporarily
+def save_uploaded_file(uploaded_file):
+    """Saves an uploaded file to a temporary location."""
+    temp_path = os.path.join("temp_uploads", uploaded_file.name)
+    with open(temp_path, 'wb') as f:
+        f.write(uploaded_file.getbuffer())
+    return temp_path
+
 import streamlit as st
 from typing import Dict
 from rubric_generator.tools import RUBRIC
 import base64
+import os
 
 # Streamlit app setup
 st.title("RUBRIC Generator Tool")
@@ -12,7 +25,7 @@ with st.form("rubric_form"):
     grade = st.text_input("Enter Grade")
     points = st.text_input("Enter Points")
     standard = st.text_input("Enter Standard")
-    assignment_url = st.text_input("Enter Assignment URL")
+    #assignment_url = st.text_input("Enter Assignment URL")
     file = st.file_uploader("Upload a file (optional)", type=["pdf", "docx", "txt"])
 
     # Form submit button
@@ -21,11 +34,18 @@ with st.form("rubric_form"):
 if submitted:
     try:
         # Check if required inputs are provided
-        if not grade or not assignment_url or not points or not standard:
-            st.error("All input fields (grade, points, standard, and assignment URL) are required.")
+        if not grade or not file or not points or not standard:
+            st.error("All input fields (grade, points, standard, and assignment ) are required.")
         else:
+            if file is not None:
+                os.makedirs("temp_uploads", exist_ok=True)
+                saved_file_path = save_uploaded_file(file)
+                #st.success(f"File saved successfully at: {saved_file_path}")
+
             # Initialize the RUBRIC generator and run it
-            gen = RUBRIC(grade, points, standard, assignment_url)
+            #if assignment_url is None:
+            #    assignment_url = file
+            gen = RUBRIC(grade, points, standard, file)
             result = gen.run()
 
             # Display result and generated PDF

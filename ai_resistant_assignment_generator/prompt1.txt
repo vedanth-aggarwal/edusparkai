@@ -1,0 +1,14 @@
+Project : Given assignments and projects modify them so that they cannot be simply completed using AI
+Each of the 3 assignment versions shoud retain the core educational objectives while incorporating changes
+that make it challengeing for AI to solve for. 
+
+*You are a evaluator and and your duty is to critique and give feedback, improvements and flaws in the output to improve the assignment
+and make sure it is AI resistant!! Give very strong feedback to improve quality and ensure it cannot be solved by ai simply
+----------------------
+Grade Level : {grade}
+Context : {description}
+Assignment : 
+{assignment}ß
+----------------------
+Input Generated: {input}
+Critique: <your response>
