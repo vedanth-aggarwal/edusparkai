@@ -38,19 +38,29 @@ if submitted:
             gen = RUBRIC(grade, points, standard, saved_file_path)
             result = gen.run()
 
-            # Display result and generated PDF
             pdf_file = "dynamic_rubric.pdf"
-            with open(pdf_file, "rb") as pdf:
-                st.success("RUBRIC generated successfully!")
-                pdf_data = pdf.read()
-                
-                # Embed PDF for display
-                base64_pdf = base64.b64encode(pdf_data).decode('utf-8')
-                pdf_display = f'<iframe src="data:application/pdf;base64,{base64_pdf}" width="700" height="900" type="application/pdf"></iframe>'
-                st.markdown(pdf_display, unsafe_allow_html=True)
 
-                # Download button
-                st.download_button(
+            # Check if the PDF file exists and is not empty
+            if os.path.exists(pdf_file) and os.path.getsize(pdf_file) > 0:
+                with open(pdf_file, "rb") as pdf:
+                    st.success("RUBRIC generated successfully!")
+                    pdf_data = pdf.read()
+
+                    # Embed PDF for display
+                    base64_pdf = base64.b64encode(pdf_data).decode('utf-8')
+                    pdf_display = f'<iframe src="data:application/pdf;base64,{base64_pdf}" width="700" height="900" type="application/pdf"></iframe>'
+                    st.markdown(pdf_display, unsafe_allow_html=True)
+
+                    # Download button
+                    st.download_button(
+                        label="Download PDF",
+                        data=pdf_data,
+                        file_name=pdf_file,
+                        mime="application/pdf"
+                    )
+            else:
+                st.error("Failed to generate PDF or the PDF file is empty.")
+            st.download_button(
                     label="Download PDF",
                     data=pdf_data,
                     file_name=pdf_file,
