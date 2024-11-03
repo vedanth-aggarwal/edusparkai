@@ -46,10 +46,10 @@ if submitted:
                 st.success("RUBRIC generated successfully!")
                 pdf_data = pdf.read()
                 
-                # Option 1: Embed PDF for display
+                ## Option 1: Embed PDF for display
                 base64_pdf = base64.b64encode(pdf_data).decode('utf-8')
-                pdf_display = f'<iframe src="data:application/pdf;base64,{base64_pdf}" width="700" height="900" frameborder="0"></iframe>'
-                st.markdown(pdf_display, unsafe_allow_html=True)
+                #pdf_display = f'<iframe src="data:application/pdf;base64,{base64_pdf}" width="700" height="900" frameborder="0"></iframe>'
+                #st.markdown(pdf_display, unsafe_allow_html=True)
 
                 # Option 2: Direct link to download the PDF
                 st.download_button(

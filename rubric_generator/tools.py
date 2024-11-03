@@ -66,7 +66,7 @@ class RUBRIC:
     def genpdf(self, rubric_data):
         """Generates a PDF document from rubric data."""
         pdf_file = "dynamic_rubric.pdf"
-        pdf = SimpleDocTemplate(pdf_file, pagesize=letter)
+        pdf = SimpleDocTemplate(pdf_file, pagesize=letter,title='Custom Rubric')
         styles = getSampleStyleSheet()
         
         table_data = []
