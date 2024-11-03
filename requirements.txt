@@ -6,3 +6,4 @@ groq
 moviepy
 python-docx
 pypdf2
+langhchain-core
