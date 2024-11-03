@@ -107,6 +107,22 @@ class RUBRIC:
         pdf.build(elements)
         print(f"PDF created successfully at {pdf_file}")
 
+    def validator(self,response):
+        data = []
+        try:
+            data = json.loads(response)
+        except json.JSONDecodeError as e:
+
+           
+            print("JSON Decode Error , Trying to correct the JSON")
+            try:
+                corrected_result = response[min(response.find('{'),response.find('[')):max(response.rfind(']'),response.rfind('}')) + 1]
+                data = json.loads(corrected_result)
+                print("Corrected Parsed JSON successfully")
+            except json.JSONDecodeError as e:
+                print("Failed to parse corrected JSON")
+        return data
+
     def run(self):
         """Main execution function to generate the rubric."""
         assignment_content = self.extract_content_from_file(self.assignment_path)  # Use file path directly
