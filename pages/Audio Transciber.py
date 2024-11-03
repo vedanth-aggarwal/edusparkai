@@ -1,8 +1,8 @@
 import streamlit as st
-from audio_converter.Audio.transcribe import Audio
-from audio_converter.Summary.summary import LLM
-from audio_converter.Converter.Mp4_converter import VideoConverter
-from audio_converter.Converter.YT_converter import youtube_converter
+from audio_converter.transcribe import Audio
+from audio_converter.summary import LLM
+from audio_converter.mp4_converter import VideoConverter
+from audio_converter.yt_converter import youtube_converter
 
 import os
 os.environ["IMAGEIO_FFMPEG_EXE"] = "/env3/bin/ffmpeg"
