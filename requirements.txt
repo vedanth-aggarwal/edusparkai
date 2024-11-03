@@ -1,3 +1,7 @@
 streamlit
 pandas
 assemblyai
+youtube-transcript-api
+tempfile
+groq
+moviepy
