@@ -12,7 +12,7 @@ class LLM:
         self.prompt()
           
     def prompt(self):
-         with open('summary_prompt.txt', 'r') as file:
+         with open('../audio_converter/summary_prompt.txt', 'r') as file:
             self.prompt_text = file.read()
 
     #def transcript(self):
