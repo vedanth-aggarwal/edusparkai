@@ -17,7 +17,6 @@ from io import BytesIO
 import requests
 # import praw
 # import prawcore
-from app.services.logger import setup_logger
 from langchain_groq import ChatGroq
 import requests
 import os
@@ -25,9 +24,7 @@ from io import BytesIO
 from PyPDF2 import PdfReader
 from docx import Document
 #from app.features.syllabus_generator import credentials
-
-logger = setup_logger(__name__)
-
+from pathlib import Path
 model_name = 'llama-3.1-70b-versatile'
 # Entire syllabus generator pipeline with all functions in this class
 class AIRAG :
@@ -67,28 +64,34 @@ class AIRAG :
                 print("Failed to parse corrected JSON")
         return data
     
-    def extract_text_from_txt(self,file_content):
-        return file_content.decode('utf-8')
+    def extract_text_from_txt(self, file_path):
+        """Extracts text from a TXT file."""
+        return self.read_text_file(file_path)
 
-    def extract_text_from_pdf(self,file_content):
-        pdf_reader = PdfReader(BytesIO(file_content))
+    def extract_text_from_pdf(self, file_path):
+        """Extracts text from a PDF file."""
         text = ''
-        for page in pdf_reader.pages:
-            text += page.extract_text()
+        with open(file_path, 'rb') as f:
+            pdf_reader = PdfReader(f)
+            for page in pdf_reader.pages:
+                text += page.extract_text() or ''
         return text
 
-    def extract_text_from_docx(self,file_content):
-        doc = Document(BytesIO(file_content))
-        text = '\n'.join([para.text for para in doc.paragraphs])
-        return text
+    def extract_text_from_docx(self, file_path):
+        """Extracts text from a DOCX file."""
+        doc = Document(file_path)
+        return '\n'.join([para.text for para in doc.paragraphs])
 
-    def download_file(self,url):
-        response = requests.get(url)
-        if response.status_code == 200:
-            content_type = response.headers['Content-Type']
-            return response.content, content_type
+    def extract_content_from_file(self, file_path):
+        """Determines file type and extracts content accordingly."""
+        if file_path.endswith('.pdf'):
+            return self.extract_text_from_pdf(file_path)
+        elif file_path.endswith('.docx'):
+            return self.extract_text_from_docx(file_path)
+        elif file_path.endswith('.txt'):
+            return self.extract_text_from_txt(file_path)
         else:
-            raise Exception(f"Failed to download the file. Status code: {response.status_code}")
+            raise Exception("Unsupported file type. Only .pdf, .docx, and .txt are supported.")
 
     def extract_content_from_url(self,file_url):
         file_content, content_type = self.download_file(file_url)
@@ -108,10 +111,11 @@ class AIRAG :
 
     def run(self):
         # Important study resources and their specific function
+        current_dir = Path(__file__).parent
 
-        prompt = self.build_prompt('/Users/vedanthaggarwal/Documents/RADICAL1/marvel-ai-backend/app/features/ai_resistant_assignment_generator/prompts/prompt.txt')
+        prompt = self.build_prompt(current_dir / 'prompt.txt')
         chain = prompt | self.model
-        assignment_content = self.extract_content_from_url(self.assignment)
+        assignment_content = self.extract_content_from_file(self.assignment)
         #print(assignment_content)
         
         original_response = chain.invoke(
@@ -123,7 +127,7 @@ class AIRAG :
         original_response = self.validator(original_response.content)
         #response = self.validator(response.content)
 
-        prompt = self.build_prompt('/Users/vedanthaggarwal/Documents/RADICAL1/marvel-ai-backend/app/features/ai_resistant_assignment_generator/prompts/prompt1.txt')
+        prompt = self.build_prompt(current_dir / 'prompt1.txt')
         chain = prompt | self.model
         critique = chain.invoke(
                         {
@@ -134,7 +138,7 @@ class AIRAG :
                         }).content
         
         print(critique)
-        prompt = self.build_prompt('/Users/vedanthaggarwal/Documents/RADICAL1/marvel-ai-backend/app/features/ai_resistant_assignment_generator/prompts/prompt2.txt')
+        prompt = self.build_prompt(current_dir / 'prompt2.txt')
         chain = prompt | self.model
         final_response = chain.invoke(
                         {
