@@ -40,25 +40,25 @@ if submitted:
             )
             result = Syllabus_Generator.run()
             with st.expander("📜 Course Description"):
-                st.text_area('Course Desription',result['course_description'])
+                st.write(result['course_description'])
             with st.expander("📜 Course Objectives"):
-                st.text_area('Course Objectives','\n'.join(result['course_objectives']))
+                st.write('\n'.join(result['course_objectives']))
             study_materials = ""
             for i in result['study_materials']:
                 study_materials += i['material']
                 study_materials += '\n'
                 study_materials += i['purpose']
             with st.expander("Study Materials"):
-                st.text_area('Study Materials',study_materials)
+                st.write(study_materials)
             course_outline = ""
             for i in result['course_outline']:
                 course_outline += i['duration']
                 course_outline += '\n'
                 course_outline += i['topic']
                 course_outline += '\n'
-                course_outline += i['sub_topics'][0]
+                course_outline += i['subtopics'][0]
             with st.expander("Course Outline"):
-                st.text_area('Course Outline',course_outline)
+                st.write(course_outline)
             grading_policy = ""
             for i in result['grading_policy']:
                 grading_policy += i['Component']
@@ -67,14 +67,14 @@ if submitted:
                 grading_policy += '\n'
                 grading_policy += i['Note']
             with st.expander("Grading Policy"):
-                st.text_area('Grading Policy',grading_policy)
+                st.write(grading_policy)
             rules = ""
             for i in result['rules_policies']:
                 rules += i
                 rules += "\n".join(result['rules_policies'][i])
                 rules += "\n\n"
             with st.expander("Rules"):
-                st.text_area('Rules',rules)
+                st.write(rules)
 
             #st.json(result)
 
