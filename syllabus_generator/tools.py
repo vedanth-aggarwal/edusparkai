@@ -170,15 +170,15 @@ class Syllabus_generator :
         #? time.sleep to avoid the quota increase error because if you use a free trial these a limit of requests per minute
 
         course_description = self.course_description()
-        time.sleep(10)
+        #time.sleep(10)
         course_objectives = self.course_objectives(course_description)
-        time.sleep(10)
+        #time.sleep(10)
         course_outline = self.course_outline(course_description,course_objectives)
-        time.sleep(10)
+        #time.sleep(10)
         grading_policy = self.grading_policy(course_outline)
-        time.sleep(10)
+        #time.sleep(10)
         rules_policies = self.rules_policies(course_outline)
-        time.sleep(10)
+        #time.sleep(10)
         study_materials = self.study_materials(course_outline)
 
         response = {
