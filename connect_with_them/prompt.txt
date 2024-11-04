@@ -13,7 +13,7 @@ highlighting how the recommendation connects to the teaching content and enhance
         }},
         ...,
         {{
-            'More informations':'this is an optional paragraph where you can add a further comment or informations,sources ...'
+            'information':'this is an optional paragraph where you can add a further comment or informations,sources ...'
         }}
     ]
     Teacher informations : I teach {subject} to {grade} students

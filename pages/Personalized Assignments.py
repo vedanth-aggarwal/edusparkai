@@ -27,12 +27,16 @@ if submitted:
             # Call the Agent_executor with the input
             result = gen.run()
             for keys in result:
-                text = ""
-                text = text + f"{keys['project title']}:\n\n"
-                text = text + f"Project: {keys['recommendation']}:\n\n"
-                text = text + f"Reasoning: {keys['rationale']}:\n\n"
-                with st.expander("Project"):
-                    st.write(text)
+                try:
+                    text = ""
+                    text = text + f"{keys['project title']}:\n\n"
+                    text = text + f"Project: {keys['recommendation']}:\n\n"
+                    text = text + f"Reasoning: {keys['rationale']}:\n\n"
+                    with st.expander("Project"):
+                        st.write(text)
+                except:
+                    with st.expander("More Info"):
+                        st.write(result[keys]['information'])
 
             st.success("Execution completed successfully!")
             #st.json(output)
