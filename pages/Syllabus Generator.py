@@ -39,7 +39,38 @@ if submitted:
                 instructions=instructions,
             )
             result = Syllabus_Generator.run()
-            st.json(result)
+            st.text_area(result['course_description'])
+            st.text_area('\n'.join(result['course_objectives']))
+            study_materials = ""
+            for i in result['study_materials']:
+                study_materials += i['material']
+                study_materials += '\n'
+                study_materials += i['purpose']
+            st.text_area(study_materials)
+            course_outline = ""
+            for i in result['course_outline']:
+                course_outline += i['duration']
+                course_outline += '\n'
+                course_outline += i['topic']
+                course_outline += '\n'
+                course_outline += i['sub_topics'][0]
+            st.text_area(course_outline)
+            grading_policy = ""
+            for i in result['grading_policy']:
+                grading_policy += i['Component']
+                grading_policy += '\n'
+                grading_policy += i['Coefficient']
+                grading_policy += '\n'
+                grading_policy += i['Note']
+            st.text_area(grading_policy)
+            rules = ""
+            for i in result['rules_policies']:
+                rules += i
+                rules += "\n".join(result['rules_policies'][i])
+                rules += "\n\n"
+            st.text_area(rules)
+
+            #st.json(result)
 
             # # Handle specific output types: PDF or Word document
             # if output_type == 'pdf':
