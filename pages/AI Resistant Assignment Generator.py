@@ -40,12 +40,11 @@ if submitted:
             for keys in result:
                 text = ""
                 for i in keys['assignment description']:
-                    text = text + f"{i} : {keys['assignment description'][i]}\n\n"
+                    text = text + f"{i.capitalize()} : {keys['assignment description'][i]}\n\n"
                 text = text + f"\n\nExplanation: {keys['explanation']}"
                 with st.expander("Assignment"):
                     st.write(text)
 
-            st.json(result)
 
         except Exception as e:
             error_message = f"Error in execution: {e}"
