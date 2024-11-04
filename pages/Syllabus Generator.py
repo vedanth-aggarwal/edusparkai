@@ -2,7 +2,6 @@ import os
 import streamlit as st
 from syllabus_generator.tools import (
     Syllabus_generator,
-    Meme_generator_with_reddit,
     WordGenerator,
     PDFGenerator,
 )
@@ -28,11 +27,9 @@ if submitted:
         st.error("Both 'Grade' and 'Subject' are required.")
     else:
         try:
-            content = file.read() if file else None  # Read file content if provided
+            #content = file.read() if file else None  # Read file content if provided
 
             # Generate memes related to the subject
-            Memes_Generator = Meme_generator_with_reddit(subject=subject)
-            memes = Memes_Generator.get_memes()
 
             # Generate the syllabus
             Syllabus_Generator = Syllabus_generator(
@@ -40,11 +37,8 @@ if submitted:
                 subject=subject,
                 syllabus_type=syllabus_type,
                 instructions=instructions,
-                content=content,
-                path="syllabus_generator/"
             )
             result = Syllabus_Generator.run()
-            result['memes'] = memes
 
             # Handle specific output types: PDF or Word document
             if output_type == 'pdf':
@@ -69,11 +63,6 @@ if submitted:
                 )
             else:
                 st.json(result)
-
-            # Display the memes in the UI
-            st.write("Memes related to the subject:")
-            for meme in memes:
-                st.image(meme, caption="Meme")
 
         except Exception as e:
             error_message = f"Error in execution: {e}"

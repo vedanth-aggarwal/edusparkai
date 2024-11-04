@@ -9,3 +9,4 @@ pypdf2
 langchain-core
 langchain-groq
 reportlab
+bs4

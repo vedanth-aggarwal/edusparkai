@@ -17,81 +17,27 @@ import requests
 import praw
 import prawcore
 from langchain_groq import ChatGroq
+from langchain_core.prompts import PromptTemplate
 #from app.services.logger import setup_logger
 #from app.features.syllabus_generator import credentials
 
-credentials = {}
 model_name = 'llama-3.1-70b-versatile'
-
-# Search engine class to extract api output and verify data
-class Search_engine:
-
-    def __init__(self, grade, subject, API_KEY=credentials['api_key'],SEARCH_ENGINE_ID=credentials['search_engine_id']):
-        self.grade = grade
-        self.subject = subject
-        self.API_KEY = API_KEY
-        self.SEARCH_ENGINE_ID = SEARCH_ENGINE_ID
-
-    def get_link(self):
-        url = 'https://www.googleapis.com/customsearch/v1'
-        params = {
-            'q': f'syllabus of {self.subject} {self.grade} level',
-            'key': self.API_KEY,
-            'cx': self.SEARCH_ENGINE_ID
-        }
-        headers = {
-            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
-        }
-        try:
-            response = requests.get(url, params=params, headers=headers)
-            response.raise_for_status()
-            data = response.json()
-            links = [item['link'] for item in data.get('items', [])]
-            if not links:
-                print("No links found in the search results.")
-            return links[0]
-        except HTTPError as http_err:
-            print(f"HTTP error occurred: {http_err}")  # Log the error
-            return ''
-        except Exception as err:
-            print(f"Other error occurred: {err}")  # Log the error
-            return ''
-        return ''
-
-    def scrap_data(self):
-        link = self.get_link()
-        if not link :
-            return []
-        try:
-            return pd.read_html(link)
-        except ValueError as e:
-            print(f"Error scraping data: {e}")  # Handle and log the scraping error
-            return []
 
 # Entire syllabus generator pipeline with all functions in this class
 class Syllabus_generator :
 
-    def __init__(self,grade,subject,Syllabus_type,instructions,content,path="",API_KEY=credentials['api_key'],SEARCH_ENGINE_ID=credentials['search_engine_id']):
+    def __init__(self,grade,subject,Syllabus_type,instructions,path=""):
         self.grade = grade
         self.subject = subject
         self.Syllabus_type = Syllabus_type
         self.instructions = instructions
-        self.content = content
-        #self.model = VertexAI(model_name='gemini-pro',temperature=0.1)
         self.model = ChatGroq(model=model_name, temperature=0.3, api_key="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")
         self.path = path
-        Engine = Search_engine(grade,subject,API_KEY,SEARCH_ENGINE_ID)
-        self.web_search = Engine.scrap_data()
 
     def read_text_file(self,filepath):
 
         with open(f"{self.path}{filepath}", 'r') as file:
             return file.read()
-
-    def stats(self):
-        df = pd.read_csv(StringIO(self.content.decode("utf-8")))
-        class_level = df.describe()
-        return class_level.to_string()
 
     def build_prompt(self,filepath):
         # build invididual promps for each sub part of syllabus
@@ -607,133 +553,3 @@ class WordGenerator:
         self.document.save(buffer)
         buffer.seek(0)
         return buffer
-
-# Generate fun memes related to subject and topic of user's syllabus
-class Meme_generator_with_reddit:
-
-    def __init__(self, subject, client_id=credentials['client_id'],client_secret=credentials['client_secret'],username=credentials['username'],password=credentials['password'],user_agent=credentials['user_agent']):
-        self.subject = subject
-        self.client_id = client_id
-        self.client_secret = client_secret
-        self.username = username
-        self.password = password
-        self.user_agent = user_agent
-
-    def get_subreddits(self):
-        params = {
-            'q': f'{self.subject} memes',
-            'type': 'sr',
-            'sort': 'relevance',
-            'limit': 10
-        }
-        data = {
-            'grant_type': 'password',
-            'username': self.username,
-            'password': self.password
-        }
-        headers = {'User-Agent': self.user_agent}
-        try:
-            auth = requests.auth.HTTPBasicAuth(self.client_id, self.client_secret)
-
-            res = requests.post('https://www.reddit.com/api/v1/access_token',
-                                auth=auth,
-                                data=data,
-                                headers=headers)
-
-            TOKEN = res.json()['access_token']
-            headers['Authorization'] = f'bearer {TOKEN}'
-
-            response = requests.get('https://oauth.reddit.com/subreddits/search', headers=headers, params=params)
-            data = response.json()['data']['children']
-            return [post['data']['display_name'] for post in data]
-        except requests.exceptions.RequestException as e:
-            print(f"An error occurred during the request: {e}")
-            return []
-        except KeyError as e:
-            print(f"Unexpected response format: {e}")
-            return []
-
-    def get_memes(self):
-        reddit = praw.Reddit(
-            client_id=self.client_id,
-            client_secret=self.client_secret,
-            user_agent=self.user_agent
-        )
-
-        subreddits = self.get_subreddits()
-        meme_urls = []
-
-        for subreddit_name in subreddits:
-            try:
-                subreddit = reddit.subreddit(subreddit_name)
-                for submission in subreddit.hot(limit=10):
-                    if not submission.stickied and submission.url.endswith(('jpg', 'jpeg', 'png', 'gif')):
-                        meme_urls.append(submission.url)
-                        if len(meme_urls) >= 15:
-                            return meme_urls
-            except prawcore.exceptions.Redirect as e:
-                print(f"Subreddit {subreddit_name} not found (Redirect Error): {e}")
-            except prawcore.exceptions.NotFound as e:
-                print(f"Subreddit {subreddit_name} not found (404 Not Found): {e}")
-            except praw.exceptions.PRAWException as e:
-                print(f"An error occurred while processing subreddit {subreddit_name}: {e}")
-            except Exception as e:
-                print(f"An unexpected error occurred while processing subreddit {subreddit_name}: {e}")
-            continue
-
-        return meme_urls
-
-# Additional scraper functionality in meme generator
-class Meme_generator_with_scraper:
-
-    def __init__(self,grade,subject,API_KEY=credentials['api_key'],SEARCH_ENGINE_ID=credentials['search_engine_id']):
-        self.grade = grade
-        self.subject = subject
-        self.API_KEY = API_KEY
-        self.SEARCH_ENGINE_ID = SEARCH_ENGINE_ID
-
-    def get_link(self):
-        url = 'https://www.googleapis.com/customsearch/v1'
-        params = {
-            'q': f'Memes of {self.grade} {self.subject}',
-            'key': self.API_KEY,
-            'cx': self.SEARCH_ENGINE_ID
-        }
-        headers = {
-            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
-        }
-        try:
-            response = requests.get(url, params=params, headers=headers)
-            response.raise_for_status()
-            data = response.json()
-            links = [item['link'] for item in data.get('items', [])]
-            if not links:
-                print("No links found in the search results.")
-            return links[0]
-        except HTTPError as http_err:
-            print(f"HTTP error occurred: {http_err}")  # Log the error
-        except Exception as err:
-            print(f"Other error occurred: {err}")  # Log the error
-        return ''
-
-    def scrap_data(self):
-        # Scrap the link to find image components
-        link = self.get_link()
-        if not link:
-            return []
-        try :
-            response = requests.get(link)
-            soup = BeautifulSoup(response.text, 'html.parser')
-
-            # Find all image tags and extract their 'src' attributes
-            images = []
-            for img in soup.find_all('img'):
-                if img.get('src'):
-                    images.append(img.get('src'))
-            return images
-
-        except Exception as e:
-            print(f"An error occurred: {e}")
-            return []
-# ! This approach is not recommended as it is not reliable and some websites may block your requests
-# ! plus this extract images from the website that may have some logos or ads which is not suitable for our purpose
