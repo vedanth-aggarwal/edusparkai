@@ -8,7 +8,7 @@ and make sure it is AI resistant!! Give very strong feedback to improve quality 
 Grade Level : {grade}
 Context : {description}
 Assignment : 
-{assignment}ß
+{assignment}:
 ----------------------
 Input Generated: {input}
 Critique: <your response>
