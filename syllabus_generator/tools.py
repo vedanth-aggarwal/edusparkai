@@ -14,8 +14,6 @@ from requests.exceptions import HTTPError
 from io import BytesIO,StringIO
 from bs4 import BeautifulSoup
 import requests
-import praw
-import prawcore
 from langchain_groq import ChatGroq
 from langchain_core.prompts import PromptTemplate
 #from app.services.logger import setup_logger
