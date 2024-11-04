@@ -1,10 +1,6 @@
 import streamlit as st
 from typing import Any, Dict, Optional
-from app.features.notes_generator.tools import NotesGenerator
-from app.services.logger import setup_logger
-
-# Initialize the logger
-logger = setup_logger(__name__)
+from notes_generator.tools import NotesGenerator
 
 # Streamlit UI setup
 st.title("Notes Generator")
@@ -40,9 +36,7 @@ if st.button("Generate Notes"):
             st.json(result)
 
     except ValueError as ve:
-        logger.error(f"Validation error: {ve}")
         st.error(f"Validation error: {ve}")
     except Exception as e:
         error_message = f"Error generating notes: {e}"
-        logger.error(error_message)
         st.error(error_message)

@@ -146,7 +146,7 @@ class NotesGenerator:
         """
         text = ""
         try:
-            ppt = Presentation(BytesIO(file_content))
+            ppt = "" # Presentation(BytesIO(file_content))
             for slide in ppt.slides:
                 for shape in slide.shapes:
                     if hasattr(shape, "text"):
