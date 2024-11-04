@@ -72,7 +72,7 @@ class Syllabus_generator :
                                  "subject" : self.subject,
                                  "Syllabus_type" : self.Syllabus_type,
                                  "instructions" : self.instructions
-                                 })
+                                 }).content
         return response
 
     def course_objectives(self,course_description:str) -> str:
@@ -92,7 +92,7 @@ class Syllabus_generator :
                             "instructions" : self.instructions,
 
                             'course_description': course_description
-                        })
+                        }).content
 
         return self.Validator(response)
 
@@ -110,7 +110,7 @@ class Syllabus_generator :
                              'instructions' : self.instructions,
                              'course_objectives' : course_objectives,
                              'course_description' : course_description,
-                         })
+                         }).content
 
         return self.Validator(response)
 
@@ -127,7 +127,7 @@ class Syllabus_generator :
                             'Syllabus_type' : self.Syllabus_type,
                             "instructions" : self.instructions,
                             'course_outline' : course_outline
-                        })
+                        }).content
 
         return self.Validator(response)
 
@@ -144,7 +144,7 @@ class Syllabus_generator :
                             'Syllabus_type' : self.Syllabus_type,
                             "instructions" : self.instructions,
                             'course_outline' : course_outline
-                        })
+                        }).content
 
         return self.Validator(response)
 
@@ -161,7 +161,7 @@ class Syllabus_generator :
                             'Syllabus_type' : self.Syllabus_type,
                             "instructions" : self.instructions,
                             'course_outline' : course_outline
-                        })
+                        }).content
         return self.Validator(response)
 
     def run(self,verbose=False):
