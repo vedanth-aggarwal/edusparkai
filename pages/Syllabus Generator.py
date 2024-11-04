@@ -1,19 +1,11 @@
+import os
 import streamlit as st
-from app.services.logger import setup_logger
-from app.features.syllabus_generator.tools import (
+from syllabus_generator.tools import (
     Syllabus_generator,
     Meme_generator_with_reddit,
     WordGenerator,
     PDFGenerator,
 )
-from app.services.schemas import InputData
-import os
-
-# Environment setup
-os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "local-auth.json"
-
-# Logger initialization
-logger = setup_logger(__name__)
 
 # Streamlit UI setup
 st.title("Syllabus Generator and Content Creator")
@@ -49,7 +41,7 @@ if submitted:
                 syllabus_type=syllabus_type,
                 instructions=instructions,
                 content=content,
-                path="app/features/syllabus_generator/"
+                path="syllabus_generator/"
             )
             result = Syllabus_Generator.run()
             result['memes'] = memes
@@ -85,5 +77,4 @@ if submitted:
 
         except Exception as e:
             error_message = f"Error in execution: {e}"
-            logger.error(error_message)
             st.error(error_message)

@@ -18,12 +18,9 @@ from bs4 import BeautifulSoup
 import requests
 import praw
 import prawcore
-from langchain_groq import ChatGroq
 #from app.services.logger import setup_logger
 #from app.features.syllabus_generator import credentials
 
-credentials = {}
-model_name = 'llama-3.1-70b-versatile'
 
 # Search engine class to extract api output and verify data
 class Search_engine:
@@ -79,8 +76,7 @@ class Syllabus_generator :
         self.Syllabus_type = Syllabus_type
         self.instructions = instructions
         self.content = content
-        #self.model = VertexAI(model_name='gemini-pro',temperature=0.1)
-        self.model = ChatGroq(model=model_name, temperature=0.3, api_key="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")
+        self.model = VertexAI(model_name='gemini-pro',temperature=0.1)
         self.path = path
         Engine = Search_engine(grade,subject,API_KEY,SEARCH_ENGINE_ID)
         self.web_search = Engine.scrap_data()
