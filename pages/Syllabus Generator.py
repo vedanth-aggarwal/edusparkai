@@ -39,14 +39,17 @@ if submitted:
                 instructions=instructions,
             )
             result = Syllabus_Generator.run()
-            st.text_area('Course Desription',result['course_description'])
-            st.text_area('Course Objectives','\n'.join(result['course_objectives']))
+            with st.expander("📜 Course Description"):
+                st.text_area('Course Desription',result['course_description'])
+            with st.expander("📜 Course Objectives"):
+                st.text_area('Course Objectives','\n'.join(result['course_objectives']))
             study_materials = ""
             for i in result['study_materials']:
                 study_materials += i['material']
                 study_materials += '\n'
                 study_materials += i['purpose']
-            st.text_area(study_materials)
+            with st.expander("Study Materials"):
+                st.text_area('Study Materials',study_materials)
             course_outline = ""
             for i in result['course_outline']:
                 course_outline += i['duration']
@@ -54,7 +57,8 @@ if submitted:
                 course_outline += i['topic']
                 course_outline += '\n'
                 course_outline += i['sub_topics'][0]
-            st.text_area(course_outline)
+            with st.expander("Course Outline"):
+                st.text_area('Course Outline',course_outline)
             grading_policy = ""
             for i in result['grading_policy']:
                 grading_policy += i['Component']
@@ -62,13 +66,15 @@ if submitted:
                 grading_policy += i['Coefficient']
                 grading_policy += '\n'
                 grading_policy += i['Note']
-            st.text_area(grading_policy)
+            with st.expander("Grading Policy"):
+                st.text_area('Grading Policy',grading_policy)
             rules = ""
             for i in result['rules_policies']:
                 rules += i
                 rules += "\n".join(result['rules_policies'][i])
                 rules += "\n\n"
-            st.text_area(rules)
+            with st.expander("Rules"):
+                st.text_area('Rules',rules)
 
             #st.json(result)
 
