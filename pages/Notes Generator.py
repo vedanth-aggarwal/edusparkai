@@ -1,6 +1,14 @@
 import streamlit as st
 from typing import Any, Dict, Optional
 from notes_generator.tools import NotesGenerator
+import os
+
+def save_uploaded_file(uploaded_file):
+    """Saves an uploaded file to a temporary location."""
+    temp_path = os.path.join("temp_uploads", uploaded_file.name)
+    with open(temp_path, 'wb') as f:
+        f.write(uploaded_file.getbuffer())
+    return temp_path
 
 # Streamlit UI setup
 st.title("Notes Generator")
@@ -14,26 +22,25 @@ columns = st.selectbox("Select Number of Columns", [1, 2], index=0)
 
 if st.button("Generate Notes"):
     try:
-        file_content = file.read() if file else None
+        #file_content = file.read() if file else None
+
+        os.makedirs("temp_uploads", exist_ok=True)
+        saved_file_path = save_uploaded_file(file)
 
         # Ensure at least one input source is provided
-        if not file_url and not file_content:
-            st.error("Either a file URL or file content must be provided.")
-        else:
-            # Initialize the NotesGenerator
-            notes_generator = NotesGenerator(
+        notes_generator = NotesGenerator(
                 model='llama-3.1-70b-versatile',
-                notes_content=file_url or file_content,
+                notes_content=saved_file_path,
                 orientation=orientation,
                 columns=columns
             )
 
             # Run the notes generation process
-            result = notes_generator.run()
+        result = notes_generator.run()
 
             # Display results
-            st.success("Notes generated successfully.")
-            st.json(result)
+        st.success("Notes generated successfully.")
+        st.json(result)
 
     except ValueError as ve:
         st.error(f"Validation error: {ve}")

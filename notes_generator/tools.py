@@ -79,84 +79,17 @@ class NotesGenerator:
         doc = Document(BytesIO(file_content))
         text = '\n'.join([para.text for para in doc.paragraphs])
         return text
-
-    def extract_text_from_youtube(self, video_url):
-            video_id = self.extract_video_id(video_url)
-            if video_id:
-                try:
-                    transcript = YouTubeTranscriptApi.get_transcript(video_id)
-                    return "".join([entry['text'] for entry in transcript])
-                except Exception as e:
-                    print(f"Error retrieving YouTube transcript: {e}")
-                    return "No transcript available."
-            else:
-                print("Invalid YouTube URL.")
-                return "No transcript available."
-
-    def extract_video_id(self, url):
-        if "youtu.be/" in url:
-            return url.split('/')[-1]
-        elif "v=" in url:
-            return url.split("v=")[-1].split("&")[0]
-        return None
-
-    def extract_text_from_mp4(self, video_file):
-        try:
-            temp_file = tempfile.NamedTemporaryFile(delete=False, suffix=".mp4")
-            temp_file.write(video_file.read())
-            temp_file.seek(0)
-
-            video = VideoFileClip(temp_file.name)
-            temp_mp3_file = tempfile.NamedTemporaryFile(delete=False, suffix=".mp3")
-            video.audio.write_audiofile(temp_mp3_file.name)
-
-            with open(temp_mp3_file.name, "rb") as f:
-                mp3_buffer = io.BytesIO(f.read())
-
-            mp3_buffer.seek(0)
-            temp_file.close()
-            temp_mp3_file.close()
-
-            return self.extract_text_from_mp3(mp3_buffer)
-
-        except Exception as e:
-            print(f"Error extracting text from MP4: {e}")
-            return "Failed to extract content from MP4."
-
-    def extract_text_from_mp3(self, audio_file):
-        aai.settings.api_key = "b82693154c7a4a7ca95675dd807a3fe7"
-        config = aai.TranscriptionConfig(speech_model=aai.SpeechModel.nano, language_code="en_us")
-        transcriber = aai.Transcriber(config=config)
-
-        try:
-            transcript = transcriber.transcribe(audio_file)
-            if transcript.status == aai.TranscriptStatus.error:
-                print(f"Transcription error: {transcript.error}")
-                return "Failed to transcribe audio."
-            else:
-                return transcript.text
-
-        except Exception as e:
-            print(f"Error in MP3 transcription: {e}")
-            return "Failed to transcribe audio."
     
-    def extract_text_from_pptx(self, file_content):
-        """
-        Extracts text from a PPTX file.
-        """
-        text = ""
-        try:
-            ppt = "" # Presentation(BytesIO(file_content))
-            for slide in ppt.slides:
-                for shape in slide.shapes:
-                    if hasattr(shape, "text"):
-                        text += shape.text + "\n"
-        except Exception as e:
-            print(f"Error extracting text from PPTX: {e}")
-            text = "Failed to extract content from PPTX."
-
-        return text
-
+    def extract_content_from_file(self, file_path):
+        """Determines file type and extracts content accordingly."""
+        if file_path.endswith('.pdf'):
+            return self.extract_text_from_pdf(file_path)
+        elif file_path.endswith('.docx'):
+            return self.extract_text_from_docx(file_path)
+        elif file_path.endswith('.txt'):
+            return self.extract_text_from_txt(file_path)
+        else:
+            raise Exception("Unsupported file type. Only .pdf, .docx, and .txt are supported.")
 
     def extract_content_from_url(self,file_url):
         file_content, content_type = self.download_file(file_url)
@@ -233,7 +166,7 @@ class NotesGenerator:
 
         chain = prompt | self.model
 
-        notes_content = self.extract_content_from_url(self.notes_conent)
+        notes_content = self.extract_content_from_file(self.notes_conent)
         print(notes_content)
 
         response = chain.invoke(
