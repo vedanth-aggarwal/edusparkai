@@ -9,7 +9,7 @@ highlighting how the recommendation connects to the teaching content and enhance
         {{
             'project title':'...',
             'recommendation':'...',
-            'Rationale':'...'
+            'rationale':'...'
         }},
         ...,
         {{
