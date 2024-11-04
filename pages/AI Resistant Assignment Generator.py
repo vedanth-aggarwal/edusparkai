@@ -37,6 +37,14 @@ if submitted:
 
             # Display the result in Streamlit
             st.success("Assignment generated successfully!")
+            for keys in result:
+                text = ""
+                for i in keys['assignment description']:
+                    text = text + f"{i} : {keys['assignment description'][i]}\n\n"
+                text = text + f"\n\nExplanation: {keys['explanation']}"
+                with st.expander("Assignment"):
+                    st.write(text)
+
             st.json(result)
 
         except Exception as e:
