@@ -24,10 +24,10 @@ model_name = 'llama-3.1-70b-versatile'
 # Entire syllabus generator pipeline with all functions in this class
 class Syllabus_generator :
 
-    def __init__(self,grade,subject,Syllabus_type,instructions,path=""):
+    def __init__(self,grade,subject,syllabus_type,instructions,path=""):
         self.grade = grade
         self.subject = subject
-        self.Syllabus_type = Syllabus_type
+        self.Syllabus_type = syllabus_type
         self.instructions = instructions
         self.model = ChatGroq(model=model_name, temperature=0.3, api_key="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")
         self.path = path
