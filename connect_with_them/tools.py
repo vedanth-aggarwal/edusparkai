@@ -10,7 +10,7 @@ from langchain_groq import ChatGroq
 from langchain.pydantic_v1 import BaseModel, Field
 from langchain_core.prompts import PromptTemplate
 import json
-
+from pathlib import Path
 
 from bs4 import BeautifulSoup
 
@@ -24,28 +24,6 @@ class CONNECT:
         self.description = description
         self.path = path
         self.model = ChatGroq(model=model_name,temperature=0.3,api_key="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")
-        self.prompt = """
-    You are an AI that helps teachers make learning more engaging and relevant to their students , based on some informations from the teacher,
-    generate 3 creative techniques to incorporate personalized aspects ... into teaching the subject.
-    For each technique, provide a Recommendation Rationale that explains why it was suggested,
-    highlighting how the recommendation connects to the teaching content and enhances student engagement, considering the students' interests or background.
-
-    Return the result so it can be loaded using json.loads in python , a List of objects following this schema:
-
-    [
-        {{
-            'project title':'...',
-            'recommendation':'...',
-            'Rationale':'...'
-        }},
-        ...,
-        {{
-            'More informations':'this is an optional paragraph where you can add a further comment or informations,sources ...'
-        }}
-    ]
-    Teacher informations : I teach {subject} to {grade} students
-    Description: {description}
- """
 
     def read_text_file(self,filepath):
 
@@ -76,8 +54,8 @@ class CONNECT:
         return data
 
     def run(self):
-
-        prompt = self.build_prompt(self.prompt)
+        current_dir = Path(__file__).parent
+        prompt = self.build_prompt(current_dir / 'prompt.txt')
         chain = prompt | self.model
         #assignment_content = self.extract_content_from_file(self.assignment)
         #print(assignment_content)
