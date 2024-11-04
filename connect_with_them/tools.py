@@ -200,5 +200,5 @@ Agent_executor = AgentExecutor.from_agent_and_tools(
     tools=tools,
     verbose=True,
     handle_parsing_errors="Check your output formatting, ensure correct syntax.",
-    max_iterations=20
+    max_iterations=5
 )
