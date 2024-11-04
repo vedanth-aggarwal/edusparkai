@@ -9,8 +9,8 @@ from langchain.tools.base import StructuredTool
 from langchain_groq import ChatGroq
 from langchain.pydantic_v1 import BaseModel, Field
 
-from Credentials import credentials,categories_mapping
-from Prompts import Prompt_query
+from app.features.connect_with_them.Credentials import credentials,categories_mapping
+from app.features.connect_with_them.prompt.Prompts import Prompt_query
 
 from bs4 import BeautifulSoup
 
@@ -18,8 +18,30 @@ model_name = 'llama-3.1-70b-versatile'
 
 llm = ChatGroq(model=model_name,temperature=0.3,api_key="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")
 
+class GetSubredditsModel(BaseModel):
+    Topic: str = Field(description='Topic that you want to get subreddits for')
+
 class SearchArticlesModel(BaseModel):
     category: str = Field(description='Category that you want to get some information about')
+
+def get_subreddits(topic:str ,limit:int=10 ) -> str:
+    params = {'q': topic, 'type': 'sr', 'sort': 'relevance', 'limit': limit}
+    data = {'grant_type': 'password', 'username': credentials['NAME'], 'password': credentials['PASSWORD']}
+    headers = {'User-Agent': credentials['USER_AGENT']}
+    try:
+        auth = HTTPBasicAuth(credentials['CLIENT_ID'], credentials['CLIENT_SECRET'])
+        res = requests.post('https://www.reddit.com/api/v1/access_token', auth=auth, data=data, headers=headers)
+        res.raise_for_status()
+        token = res.json()['access_token']
+        headers['Authorization'] = f'bearer {token}'
+        response = requests.get('https://oauth.reddit.com/subreddits/search', headers=headers, params=params)
+        response.raise_for_status()
+        data = response.json()['data']['children']
+        subreddits = [post['data']['display_name'] for post in data]
+        return f"These are the subreddits related to '{topic}': {', '.join(subreddits)}"
+    except RequestException as e:
+        print(f"An error occurred during the request: {e}")
+        return f"No subreddits found for '{topic}'. Error: {str(e)}"
 
 def scrape_page(category: str, num_articles: int) -> list:
     # Build the URL based on the category
@@ -81,9 +103,18 @@ def Search_Articles(category: str) -> str:
         summary = summarization_chain.invoke(docs)
         return summary
     except Exception as e:
+        logging.exception(f"Error in Search_Articles for category '{category}': {str(e)}")
         return f"An error occurred while searching articles for '{category}'. Please try again later."
 
 tools = [
+    StructuredTool.from_function(
+        name='Get subreddits',
+        func=get_subreddits,
+        description= '''Get a List of subreddits about a certain topic ,
+        this tool is useful when you want to suggest a list of subreddits in the end of a response to visit for more information about a topic
+        it takes a Topic as argument''',
+        args_schema= GetSubredditsModel
+    ),
     StructuredTool.from_function(
         name='Search Articles',
         func=Search_Articles,

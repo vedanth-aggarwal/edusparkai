@@ -1,12 +1,10 @@
 import streamlit as st
 from pydantic import BaseModel
 import json
-from app.services.logger import setup_logger
-from app.features.connect_with_them.tools import Agent_executor
-from app.features.connect_with_them.prompt.Prompts import Prompt_query
+from connect_with_them.tools import Agent_executor
+from connect_with_them.Prompts import Prompt_query
 
 # Initialize the logger
-logger = setup_logger()
 
 # Title for Streamlit app
 st.title("Executor Tool")
@@ -16,7 +14,6 @@ with st.form("executor_form"):
     grade = st.text_input("Enter Grade")
     subject = st.text_input("Enter Subject")
     description = st.text_area("Enter Description")
-    file = st.file_uploader("Upload a file (optional)", type=["txt", "pdf", "docx"])
 
     # Form submit button
     submitted = st.form_submit_button("Execute")
@@ -45,5 +42,4 @@ if submitted:
 
         except Exception as e:
             error_message = f"Error in executor: {e}"
-            logger.error(error_message)
             st.error(error_message)
