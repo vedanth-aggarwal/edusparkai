@@ -11,7 +11,20 @@ from langchain.pydantic_v1 import BaseModel, Field
 from langchain_core.prompts import PromptTemplate
 import json
 
-prompt = """
+
+from bs4 import BeautifulSoup
+
+model_name = 'llama-3.1-70b-versatile'
+
+class CONNECT:
+
+    def __init__(self,grade,subject,description='',path=""):
+        self.grade = grade
+        self.subject = subject
+        self.description = description
+        self.path = path
+        self.model = ChatGroq(model=model_name,temperature=0.3,api_key="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")
+        self.prompt = """
     You are an AI that helps teachers make learning more engaging and relevant to their students , based on some informations from the teacher,
     generate 3 creative techniques to incorporate personalized aspects ... into teaching the subject.
     For each technique, provide a Recommendation Rationale that explains why it was suggested,
@@ -33,19 +46,6 @@ prompt = """
     Teacher informations : I teach {subject} to {grade} students
     Description: {description}
  """
-
-from bs4 import BeautifulSoup
-
-model_name = 'llama-3.1-70b-versatile'
-
-class CONNECT:
-
-    def __init__(self,grade,subject,description='',path=""):
-        self.grade = grade
-        self.subject = subject
-        self.description = description
-        self.path = path
-        self.model = ChatGroq(model=model_name,temperature=0.3,api_key="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")
 
     def read_text_file(self,filepath):
 
