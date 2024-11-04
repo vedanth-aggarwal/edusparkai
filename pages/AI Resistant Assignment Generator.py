@@ -32,7 +32,7 @@ if submitted:
             os.makedirs("temp_uploads", exist_ok=True)
             saved_file_path = save_uploaded_file(assignment)
             # Create an instance of the AIRAG class and run the tool
-            gen = AIRAG(grade, assignment, description)
+            gen = AIRAG(grade, saved_file_path, description)
             result = gen.run()
 
             # Display the result in Streamlit
