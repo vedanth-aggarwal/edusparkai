@@ -41,29 +41,29 @@ if submitted:
             result = Syllabus_Generator.run()
             st.text_area(result)
 
-            # Handle specific output types: PDF or Word document
-            if output_type == 'pdf':
-                pdf_gen = PDFGenerator(grade, subject)
-                pdf_file = pdf_gen.generate_pdf(result)
-                st.success("PDF generated successfully!")
-                st.download_button(
-                    label="Download PDF",
-                    data=pdf_file,
-                    file_name=f"{grade}_{subject}_syllabus.pdf",
-                    mime="application/pdf"
-                )
-            elif output_type == 'word':
-                word_gen = WordGenerator(grade, subject)
-                word_file = word_gen.generate_word(result)
-                st.success("Word document generated successfully!")
-                st.download_button(
-                    label="Download Word Document",
-                    data=word_file,
-                    file_name=f"{grade}_{subject}_syllabus.docx",
-                    mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-                )
-            else:
-                st.json(result)
+            # # Handle specific output types: PDF or Word document
+            # if output_type == 'pdf':
+            #     pdf_gen = PDFGenerator(grade, subject)
+            #     pdf_file = pdf_gen.generate_pdf(result)
+            #     st.success("PDF generated successfully!")
+            #     st.download_button(
+            #         label="Download PDF",
+            #         data=pdf_file,
+            #         file_name=f"{grade}_{subject}_syllabus.pdf",
+            #         mime="application/pdf"
+            #     )
+            # elif output_type == 'word':
+            #     word_gen = WordGenerator(grade, subject)
+            #     word_file = word_gen.generate_word(result)
+            #     st.success("Word document generated successfully!")
+            #     st.download_button(
+            #         label="Download Word Document",
+            #         data=word_file,
+            #         file_name=f"{grade}_{subject}_syllabus.docx",
+            #         mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+            #     )
+            # else:
+            #     st.json(result)
 
         except Exception as e:
             error_message = f"Error in execution: {e}"
