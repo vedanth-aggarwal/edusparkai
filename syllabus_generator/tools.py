@@ -4,8 +4,6 @@ import json
 import time
 import requests
 import pandas as pd
-from langchain_core.prompts import PromptTemplate
-from langchain_google_vertexai import VertexAI
 import re
 from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
