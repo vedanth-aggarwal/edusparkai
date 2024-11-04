@@ -24,8 +24,6 @@ Example structure of the response:
     ...
 ]
 
-The topics ordering and the durations should take into consideration the class level
-Class level : {class_level}
 
 Use as reference
 ------------------------
@@ -34,9 +32,5 @@ Course Description :
 ------------------------
 Course Objectives :
 {course_objectives}
-------------------------
-Search results :
-{search_results}
-------------------------
 
 Answer:

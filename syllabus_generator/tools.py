@@ -16,8 +16,8 @@ from bs4 import BeautifulSoup
 import requests
 from langchain_groq import ChatGroq
 from langchain_core.prompts import PromptTemplate
-#from app.services.logger import setup_logger
-#from app.features.syllabus_generator import credentials
+from pathlib import Path
+current_dir = Path(__file__).parent
 
 model_name = 'llama-3.1-70b-versatile'
 
@@ -64,7 +64,7 @@ class Syllabus_generator :
         # Brief description or high level overview of course
 
         # Build prompt
-        prompt = self.build_prompt('prompts/course_description.txt')
+        prompt = self.build_prompt(current_dir / 'prompts/course_description.txt')
         # Create LLM chain
         chain = prompt | self.model
         # Generate response
@@ -78,7 +78,7 @@ class Syllabus_generator :
     def course_objectives(self,course_description:str) -> str:
         # Numbered objectives or aims of the course
 
-        prompt = self.build_prompt('prompts/course_objectives.txt')
+        prompt = self.build_prompt(current_dir /'prompts/course_objectives.txt')
         chain = prompt | self.model
 
         response = chain.invoke(
@@ -99,28 +99,15 @@ class Syllabus_generator :
     def course_outline(self,course_description:str,course_objectives:str) -> str:
         # Structured outline explaining topics and subtopics covered in a timeline
 
-        Outline_prompt = self.build_prompt('prompts/course_outline.txt')
-        Search_prompt = self.build_prompt('prompts/search_results.txt')
+        outline_prompt = self.build_prompt(current_dir / 'prompts/course_outline.txt')
 
-        chain1 = Search_prompt | self.model
-        search_results = chain1.invoke(
-                               {
-                                   'grade' : self.grade,
-                                    'subject' : self.subject,
-                                    'Syllabus_type' : self.Syllabus_type,
-                                    'web_search' : self.web_search,
-                                    "instructions":self.instructions
-                               })
-
-        chain2 = Outline_prompt | self.model
-        response = chain2.invoke(
+        chain = outline_prompt | self.model
+        response = chain.invoke(
                          {
                              'grade' : self.grade,
                              'subject' : self.subject,
                              'Syllabus_type' : self.Syllabus_type,
                              'instructions' : self.instructions,
-                             'class_level' :self.stats(),
-                             'search_results' : search_results,
                              'course_objectives' : course_objectives,
                              'course_description' : course_description,
                          })
@@ -130,7 +117,7 @@ class Syllabus_generator :
     def grading_policy(self,course_outline:str) -> str:
         # Assessment and marks policy and percentage distribtution
 
-        prompt = self.build_prompt('prompts/grading_policy.txt')
+        prompt = self.build_prompt(current_dir / 'prompts/grading_policy.txt')
         chain = prompt | self.model
 
         response = chain.invoke(
@@ -147,7 +134,7 @@ class Syllabus_generator :
     def rules_policies(self,course_outline:str) -> str:
         # Classroom rules and etiquette
 
-        prompt = self.build_prompt('prompts/rules_policies.txt')
+        prompt = self.build_prompt(current_dir / 'prompts/rules_policies.txt')
         chain = prompt | self.model
 
         response = chain.invoke(
@@ -164,7 +151,7 @@ class Syllabus_generator :
     def study_materials(self,course_outline:str) -> str:
         # Important study resources and their specific function
 
-        prompt = self.build_prompt('prompts/study_materials.txt')
+        prompt = self.build_prompt(current_dir / 'prompts/study_materials.txt')
         chain = prompt | self.model
 
         response = chain.invoke(
