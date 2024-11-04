@@ -77,7 +77,7 @@ class CONNECT:
 
     def run(self):
 
-        prompt = self.build_prompt(prompt)
+        prompt = self.build_prompt(self.prompt)
         chain = prompt | self.model
         #assignment_content = self.extract_content_from_file(self.assignment)
         #print(assignment_content)
