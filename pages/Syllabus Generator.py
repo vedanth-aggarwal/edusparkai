@@ -39,8 +39,7 @@ if submitted:
                 instructions=instructions,
             )
             result = Syllabus_Generator.run()
-            for key in result:
-                st.text_area(result[key])
+            st.json(result)
 
             # # Handle specific output types: PDF or Word document
             # if output_type == 'pdf':
