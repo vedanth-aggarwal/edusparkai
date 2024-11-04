@@ -39,8 +39,8 @@ if submitted:
                 instructions=instructions,
             )
             result = Syllabus_Generator.run()
-            st.text_area(result['course_description'])
-            st.text_area('\n'.join(result['course_objectives']))
+            st.text_area('Course Desription',result['course_description'])
+            st.text_area('Course Objectives','\n'.join(result['course_objectives']))
             study_materials = ""
             for i in result['study_materials']:
                 study_materials += i['material']
