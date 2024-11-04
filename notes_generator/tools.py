@@ -26,7 +26,7 @@ from reportlab.pdfgen import canvas
 from reportlab.platypus import Paragraph, SimpleDocTemplate, Spacer
 from reportlab.lib.styles import getSampleStyleSheet
 import json
-
+from pathlib import Path
 
 model_name = 'llama-3.1-70b-versatile'
 
@@ -228,7 +228,8 @@ class NotesGenerator:
 
     def run(self):
 
-        prompt = self.build_prompt('/prompts/prompt.txt')
+        current_dir = Path(__file__).parent
+        prompt = self.build_prompt(current_dir / 'prompt.txt')
 
         chain = prompt | self.model
 
