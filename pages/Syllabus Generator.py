@@ -46,13 +46,15 @@ if submitted:
             study_materials = ""
             for i in result['study_materials']:
                 study_materials += i['material']
-                study_materials += '\n'
+                study_materials += "\n ->"
                 study_materials += i['purpose']
+                study_materials += "\n\n"
             with st.expander("Study Materials"):
                 st.write(study_materials)
+
             course_outline = ""
             for i in result['course_outline']:
-                course_outline += i['duration']
+                course_outline += str(i['duration'])
                 course_outline += '\n'
                 course_outline += i['topic']
                 course_outline += '\n'
@@ -63,7 +65,7 @@ if submitted:
             for i in result['grading_policy']:
                 grading_policy += i['Component']
                 grading_policy += '\n'
-                grading_policy += i['Coefficient']
+                grading_policy += str(i['Coefficient'])
                 grading_policy += '\n'
                 grading_policy += i['Note']
             with st.expander("Grading Policy"):
