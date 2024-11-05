@@ -34,7 +34,7 @@ class NotesGenerator:
 
     def __init__(self,model, notes_content, path="", orientation="portrait",columns=1):
         self.model = ChatGroq(model = model_name, temperature=0.3, api_key="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")
-        self.notes_conent = notes_content
+        self.notes_content = notes_content
         self.path = path
         self.orientation = orientation
         self.columns = columns
@@ -127,7 +127,7 @@ class NotesGenerator:
 
         chain = prompt | self.model
 
-        notes_content = self.extract_content_from_file(self.notes_conent)
+        notes_content = self.extract_content_from_file(self.notes_content)
         print(notes_content)
 
         response = chain.invoke(
@@ -135,9 +135,9 @@ class NotesGenerator:
                 "notes_content": notes_content
         })
 
-        print(response.content)
+        response = response.content
 
-        response = self.validator(response.content)
+        #response = self.validator(response.content)
 
         #self.generate_notes_pdf(response)
         print(response)
