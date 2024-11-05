@@ -40,7 +40,7 @@ def main():
             st.text_area("Transcript", transcript, height=300)
         
         processor = Processor('llama-3.1-70b-versatile')
-        yt_processor = YoutubeProcessor(processor)
+        yt_processor = YoutubeProcessor(processor,parser)
         #option = st.radio("Choose your task:", ("Generate Summary", "Generate Quiz"))    
 
         result = processor.retrieve_youtube_documents(transcript, verbose=False)
