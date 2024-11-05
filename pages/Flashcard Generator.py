@@ -20,7 +20,8 @@ st.title("FLASHCARD Generator Tool")
 
 # Form for user input
 with st.form("flashcard_form"):
-    file = st.file_uploader("Upload a file (optional)", type=["pdf", "docx", "txt"])
+    #file = st.file_uploader("Upload a file (optional)", type=["pdf", "docx", "txt"])
+    youtube_url = st.text_input("YouTube URL", "")
 
     # Form submit button
     submitted = st.form_submit_button("Generate RUBRIC")
@@ -28,11 +29,11 @@ with st.form("flashcard_form"):
 if submitted:
     try:
         # Check if required inputs are provided
-        if not file:
+        if not youtube_url:
             st.error("All input fields (grade, points, standard, and assignment) are required.")
         else:
             os.makedirs("temp_uploads", exist_ok=True)
-            saved_file_path = save_uploaded_file(file)
+            #saved_file_path = save_uploaded_file(file)
 
             os.environ['GRPC_DNS_RESOLVER'] = 'native'
 
@@ -53,14 +54,14 @@ if submitted:
                 # advanced settings
 
             genai_processor = GeminiProcessor(
-                    model_name = "gemini-pro",
-                    project = "gemini-quizzify-427910" #"gemini-dynamo-428115" #ai-dev-cqc-q1-2024 #gemini-quizzify-427910
+                    model_name = "llama-3.1-70b-versatile",
+                    project = "" #"gemini-dynamo-428115" #ai-dev-cqc-q1-2024 #gemini-quizzify-427910
                 )
 
             def analyze_video(request: VideoAnalysisRequest):
                 # Doing the analysis
                 processor = YoutubeProcessor(genai_processor = genai_processor,parser=parser)
-                result = processor.retrieve_youtube_documents(str("https://www.youtube.com/watch?v=ZM8ECpBuQYE"), verbose=False)
+                result = processor.retrieve_youtube_documents(youtube_url, verbose=False)
                 
                 #summary = genai_processor.generate_document_summary(result, verbose=True)
                 
