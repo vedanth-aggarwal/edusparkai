@@ -40,8 +40,8 @@ if submitted:
             for keys in result:
                 text = ""
                 for i in keys['assignment description']:
-                    text = text + f"{i.capitalize()} : {keys['assignment description'][i]}\n\n"
-                text = text + f"\n\nExplanation: {keys['explanation']}"
+                    text = text + f"**{i.capitalize()}** : {keys['assignment description'][i]}\n\n"
+                text = text + f"\n\n**Explanation**: {keys['explanation']}"
                 with st.expander("Assignment"):
                     st.write(text)
 

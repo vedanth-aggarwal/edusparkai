@@ -29,14 +29,14 @@ if submitted:
             for keys in result:
                 try:
                     text = ""
-                    text = text + f"{keys['project title']}:\n\n"
-                    text = text + f"Project: {keys['recommendation']}:\n\n"
-                    text = text + f"Reasoning: {keys['rationale']}:\n\n"
+                    text = text + f"**{keys['project title']}**:\n\n"
+                    text = text + f"**Project**: {keys['recommendation']}:\n\n"
+                    text = text + f"**Reasoning**: {keys['rationale']}:\n\n"
                     with st.expander("Project"):
                         st.write(text)
                 except:
                     with st.expander("More Info"):
-                        st.write(result[keys][0])
+                        st.write(result[keys])
 
             st.success("Execution completed successfully!")
             #st.json(output)
