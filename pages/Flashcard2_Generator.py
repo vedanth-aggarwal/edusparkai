@@ -48,7 +48,7 @@ def main():
         #summary = genai_processor.generate_document_summary(result, verbose=True)
         
         # Find key concepts
-        raw_concepts = processor.find_key_concepts(result, verbose=True)
+        raw_concepts = yt_processor.find_key_concepts(result, verbose=True)
         
         # Deconstruct
         #unique_concepts = {}
