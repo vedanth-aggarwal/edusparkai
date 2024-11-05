@@ -32,13 +32,11 @@ if st.button("Generate Notes"):
                 model='llama-3.1-70b-versatile',
                 notes_content=saved_file_path,
             )
-        
-        st.success('HELLO')
-            # Run the notes generation process
+        st.success("Notes generated successfully.")
         result = notes_generator.run()
 
             # Display results
-        st.success("Notes generated successfully.")
+       
         st.write(result)
 
     except ValueError as ve:

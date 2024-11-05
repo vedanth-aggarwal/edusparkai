@@ -15,16 +15,14 @@ from langchain_core.prompts import PromptTemplate
 from langchain_core.runnables import RunnablePassthrough, RunnableParallel
 from langchain_core.output_parsers import JsonOutputParser
 from langchain_core.pydantic_v1 import BaseModel, Field
-from langchain_google_genai import GoogleGenerativeAI
-from langchain_google_genai import GoogleGenerativeAIEmbeddings
+#from langchain_google_genai import GoogleGenerativeAI
+##from langchain_google_genai import GoogleGenerativeAIEmbeddings
 
-from app.services.logger import setup_logger
-from app.services.tool_registry import ToolFile
-from app.api.error_utilities import LoaderError
+#from app.services.logger import setup_logger
+#from app.services.tool_registry import ToolFile
+#from app.api.error_utilities import LoaderError
 
-relative_path = "features/quzzify"
-
-logger = setup_logger(__name__)
+#relative_path = "features/quzzify"
 
 def transform_json_dict(input_data: dict) -> dict:
     # Validate and parse the input data to ensure it matches the QuizQuestion schema
@@ -210,10 +208,10 @@ class RAGpipeline:
 
     def load_PDFs(self, files) -> List[Document]:
         if self.verbose:
-            logger.info(f"Loading {len(files)} files")
-            logger.info(f"Loader type used: {type(self.loader)}")
+            #logger.info(f"Loading {len(files)} files")
+            #ogger.info(f"Loader type used: {type(self.loader)}")
         
-        logger.debug(f"Loader is a: {type(self.loader)}")
+        #logger.debug(f"Loader is a: {type(self.loader)}")
         
         try:
             total_loaded_files = self.loader.load(files)
@@ -297,7 +295,7 @@ class QuizBuilder:
         
         chain = runner | prompt | self.model | self.parser
         
-        if self.verbose: logger.info(f"Chain compilation complete")
+        #if self.verbose: logger.info(f"Chain compilation complete")
         
         return chain
 
@@ -322,7 +320,7 @@ class QuizBuilder:
         return [{"key": k, "value": v} for k, v in choices.items()]
     
     def create_questions(self, num_questions: int = 5) -> List[Dict]:
-        if self.verbose: logger.info(f"Creating {num_questions} questions")
+        #if self.verbose: logger.info(f"Creating {num_questions} questions")
         
         if num_questions > 10:
             return {"message": "error", "data": "Number of questions cannot exceed 10"}
@@ -336,7 +334,8 @@ class QuizBuilder:
         while len(generated_questions) < num_questions and attempts < max_attempts:
             response = chain.invoke(self.topic)
             if self.verbose:
-                logger.info(f"Generated response attempt {attempts + 1}: {response}")
+                pass
+                #logger.info(f"Generated response attempt {attempts + 1}: {response}")
 
             response = transform_json_dict(response)
             # Directly check if the response format is valid
@@ -344,20 +343,22 @@ class QuizBuilder:
                 response["choices"] = self.format_choices(response["choices"])
                 generated_questions.append(response)
                 if self.verbose:
-                    logger.info(f"Valid question added: {response}")
-                    logger.info(f"Total generated questions: {len(generated_questions)}")
+                    pass
+                    #logger.info(f"Valid question added: {response}")
+                    #logger.info(f"Total generated questions: {len(generated_questions)}")
             else:
                 if self.verbose:
-                    logger.warning(f"Invalid response format. Attempt {attempts + 1} of {max_attempts}")
+                    pass
+                    #logger.warning(f"Invalid response format. Attempt {attempts + 1} of {max_attempts}")
             
             # Move to the next attempt regardless of success to ensure progress
             attempts += 1
 
         # Log if fewer questions are generated
-        if len(generated_questions) < num_questions:
-            logger.warning(f"Only generated {len(generated_questions)} out of {num_questions} requested questions")
+        #if len(generated_questions) < num_questions:
+        #    logger.warning(f"Only generated {len(generated_questions)} out of {num_questions} requested questions")
         
-        if self.verbose: logger.info(f"Deleting vectorstore")
+        #if self.verbose: logger.info(f"Deleting vectorstore")
         self.vectorstore.delete_collection()
         
         # Return the list of questions
