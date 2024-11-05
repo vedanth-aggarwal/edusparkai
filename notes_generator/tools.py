@@ -39,17 +39,35 @@ class NotesGenerator:
         self.orientation = orientation
         self.columns = columns
 
-    def read_text_file(self,filepath):
-
-        with open(f"{self.path}{filepath}", 'r') as file:
+    def read_text_file(self, filepath):
+        """Reads text from a file."""
+        with open(filepath, 'r', encoding='utf-8') as file:
             return file.read()
-        
+    
     def build_prompt(self,filepath):
         # build invididual promps for each sub part of syllabus
         template = self.read_text_file(filepath)
 
         prompt = PromptTemplate.from_template(template)
         return prompt
+
+    def extract_text_from_txt(self, file_path):
+        """Extracts text from a TXT file."""
+        return self.read_text_file(file_path)
+
+    def extract_text_from_pdf(self, file_path):
+        """Extracts text from a PDF file."""
+        text = ''
+        with open(file_path, 'rb') as f:
+            pdf_reader = PdfReader(f)
+            for page in pdf_reader.pages:
+                text += page.extract_text() or ''
+        return text
+
+    def extract_text_from_docx(self, file_path):
+        """Extracts text from a DOCX file."""
+        doc = Document(file_path)
+        return '\n'.join([para.text for para in doc.paragraphs])
     
     def validator(self,response):
         data = []
@@ -65,20 +83,6 @@ class NotesGenerator:
                 print("Failed to parse corrected JSON")
         return data
 
-    def extract_text_from_txt(self,file_content):
-        return file_content.decode('utf-8')
-
-    def extract_text_from_pdf(self,file_content):
-        pdf_reader = PdfReader(BytesIO(file_content))
-        text = ''
-        for page in pdf_reader.pages:
-            text += page.extract_text()
-        return text
-
-    def extract_text_from_docx(self,file_content):
-        doc = Document(BytesIO(file_content))
-        text = '\n'.join([para.text for para in doc.paragraphs])
-        return text
     
     def extract_content_from_file(self, file_path):
         """Determines file type and extracts content accordingly."""
