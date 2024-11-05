@@ -79,7 +79,7 @@ class YoutubeProcessor:
     
     def __init__(self, genai_processor: Processor,parser):
         self.text_splitter = RecursiveCharacterTextSplitter(
-            chunk_size = 1000,
+            chunk_size = 100,
             chunk_overlap = 0
         )
         self.GeminiProcessor = genai_processor
