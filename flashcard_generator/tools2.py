@@ -85,8 +85,6 @@ class YoutubeProcessor:
         self.GeminiProcessor = genai_processor
         self.parser = parser
     
-
-    
     def retrieve_youtube_documents(self, docs, verbose = False):
         #loader = YoutubeLoader.from_youtube_url(video_url, add_video_info=True)
         #docs = loader.load()
