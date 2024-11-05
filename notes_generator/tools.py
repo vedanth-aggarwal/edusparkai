@@ -119,7 +119,6 @@ class NotesGenerator:
         else:
             raise Exception(f"Unsupported file type: {content_type}. Unable to extract content.")
         
-    
     def generate_notes_pdf(self, response):
         output_filename = "generated_notes.pdf"
         page_size = landscape(letter) if self.orientation == 'landscape' else letter
@@ -178,7 +177,7 @@ class NotesGenerator:
 
         response = self.validator(response.content)
 
-        self.generate_notes_pdf(response)
+        #self.generate_notes_pdf(response)
         print(response)
         return response
 
