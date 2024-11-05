@@ -74,14 +74,14 @@ class YoutubeProcessor:
         docs = "The sun dipped below the horizon, casting a warm, amber glow across the fields. The air was filled with the gentle rustling of leaves and the distant hum of crickets beginning their nightly song. A faint breeze carried the scent of wildflowers, mingling with the earthy aroma of freshly tilled soil. In the distance, a lone farmhouse stood silhouetted against the fading light, its windows glowing softly like embers in the gathering dusk. A sense of calm settled over the landscape, as if nature itself was breathing a sigh of relief, savoring the quiet moments before the stars would begin their nightly dance across the sky."
         result = self.text_splitter.split_documents(docs)
         print(result[:2])
-        author = result[0].metadata['author']
-        length = result[0].metadata['length']
-        title = result[0].metadata['title']
-        total_size = len(result)
+        #author = result[0].metadata['author']
+        #length = result[0].metadata['length']
+        #title = result[0].metadata['title']
+        #total_size = len(result)
         
         if verbose:
             total_billable_characters = self.GeminiProcessor.count_total_tokens(result)
-            logging.info(f"{author}\n{length}\n{title}\n{total_size}\n{total_billable_characters}")
+            #logging.info(f"{author}\n{length}\n{title}\n{total_size}\n{total_billable_characters}")
         
         return result
     def clean_json_string(json_str):
