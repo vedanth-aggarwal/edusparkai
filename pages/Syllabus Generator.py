@@ -54,25 +54,26 @@ if submitted:
 
             course_outline = ""
             for i in result['course_outline']:
-                course_outline = course_outline + f"**{i['duration']}**"
-                course_outline += "\n\n  "
-                course_outline = course_outline + f"**{i['topic']}**"
-                course_outline += "\n\n  "
-                course_outline += i['subtopics'][0]
+                course_outline = course_outline + f"**{i['duration']}** - **{i['topic']}**"
+                course_outline += "\n\n"
+                course_outline += f"-> {i['subtopics'][0]}"
+                course_outline += "\n\n"
             with st.expander("Course Outline"):
                 st.write(course_outline)
             grading_policy = ""
             for i in result['grading_policy']:
                 grading_policy += f"**{i['Component']}** ({i['Coefficient']})"
-                grading_policy += '\n\n  '
-                grading_policy += i['Note']
+                grading_policy += "\n\n"
+                grading_policy += f"-> {i['Note']}"
+                grading_policy += "\n\n"
             with st.expander("Grading Policy"):
                 st.write(grading_policy)
             rules = ""
             for i in result['rules_policies']:
-                rules += i
-                rules += "\n\n".join(result['rules_policies'][i])
-                rules += "\n  \n  "
+                rules += f"**{i}**"
+                for rule in result['rules_policies'][i]:
+                    rules += f"\n\n->{rule}"
+                rules += "\n\n"
             with st.expander("Rules"):
                 st.write(rules)
             st.json(result)
