@@ -69,8 +69,8 @@ class YoutubeProcessor:
 
     
     def retrieve_youtube_documents(self, video_url: str, verbose = False):
-        loader = YoutubeLoader.from_youtube_url(video_url, add_video_info=True)
-        docs = loader.load()
+        #loader = YoutubeLoader.from_youtube_url(video_url, add_video_info=True)
+        #docs = loader.load()
         docs = "The sun dipped below the horizon, casting a warm, amber glow across the fields. The air was filled with the gentle rustling of leaves and the distant hum of crickets beginning their nightly song. A faint breeze carried the scent of wildflowers, mingling with the earthy aroma of freshly tilled soil. In the distance, a lone farmhouse stood silhouetted against the fading light, its windows glowing softly like embers in the gathering dusk. A sense of calm settled over the landscape, as if nature itself was breathing a sigh of relief, savoring the quiet moments before the stars would begin their nightly dance across the sky."
         result = self.text_splitter.split_documents(docs)
         print(result[:2])
