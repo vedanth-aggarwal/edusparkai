@@ -103,6 +103,7 @@ class YoutubeProcessor:
             #logging.info(f"{author}\n{length}\n{title}\n{total_size}\n{total_billable_characters}")
         
         return result
+    
     def clean_json_string(json_str):
                 """Clean JSON String capturing only the value between curly braces
                 Args:
@@ -121,7 +122,7 @@ class YoutubeProcessor:
                     # If no match is found, return None
                     return None
                 
-    def find_key_concepts(self, documents:list, sample_size: int = 0, verbose = False):
+    def find_key_concepts(self, documents:list, sample_size: int = 3, verbose = False):
         # iterate through all documents of group size N and find key concepts
         if sample_size > len(documents):
             raise ValueError("Group size is larger than the number of documents")
