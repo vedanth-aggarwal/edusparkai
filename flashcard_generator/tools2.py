@@ -91,7 +91,7 @@ class YoutubeProcessor:
         #docs = loader.load()
         #docs = "The sun dipped below the horizon, casting a warm, amber glow across the fields. The air was filled with the gentle rustling of leaves and the distant hum of crickets beginning their nightly song. A faint breeze carried the scent of wildflowers, mingling with the earthy aroma of freshly tilled soil. In the distance, a lone farmhouse stood silhouetted against the fading light, its windows glowing softly like embers in the gathering dusk. A sense of calm settled over the landscape, as if nature itself was breathing a sigh of relief, savoring the quiet moments before the stars would begin their nightly dance across the sky."
         result = self.text_splitter.split_text(docs)
-        st.success(len(result))
+        st.success(len(result),result)
         
         #author = result[0].metadata['author']
         #length = result[0].metadata['length']
