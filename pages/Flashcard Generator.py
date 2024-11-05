@@ -58,7 +58,7 @@ if submitted:
                     project = "" #"gemini-dynamo-428115" #ai-dev-cqc-q1-2024 #gemini-quizzify-427910
                 )
 
-            def analyze_video(request: VideoAnalysisRequest):
+            def analyze_video(youtube_url):
                 # Doing the analysis
                 processor = YoutubeProcessor(genai_processor = genai_processor,parser=parser)
                 result = processor.retrieve_youtube_documents(youtube_url, verbose=False)
@@ -84,6 +84,8 @@ if submitted:
                 st.json({
                     "key_concepts": key_concepts_list
                 })
+            
+            analyze_video(youtube_url)
 
 
 
