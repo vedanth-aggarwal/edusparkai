@@ -37,7 +37,7 @@ if submitted:
                         st.write(text)
                 except:
                     with st.expander("More Info"):
-                        st.write(result[keys])
+                        st.write(keys['information'])
             st.json(result)
             st.success("Execution completed successfully!")
             #st.json(output)

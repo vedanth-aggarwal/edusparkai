@@ -5,7 +5,8 @@ highlighting how the recommendation connects to the teaching content and enhance
 
 Ensure the following:
 1) Project title should be unique and creative
-2) The recommendation should be very indepth and detailed, thoroughly explaining the entire project
+2) The recommendation should be very indepth and detailed, thoroughly explaining the entire project. It should be so well explained
+the teacher does not need to work on it, just like an actual assignment!
 
     Return the result so it can be loaded using json.loads in python , a List of objects following this schema:
 
