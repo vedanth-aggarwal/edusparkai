@@ -18,6 +18,8 @@ from langchain_groq import ChatGroq
 from langchain_core.prompts import PromptTemplate
 from pathlib import Path
 current_dir = Path(__file__).parent
+from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph
+from reportlab.lib.styles import getSampleStyleSheet
 
 model_name = 'llama-3.1-70b-versatile'
 
@@ -382,11 +384,15 @@ class PDFGenerator:
         c.setFont("Helvetica", 12)
         table_data = [['Material','Purpose']]
         for material in data['study_materials']:
+            styles = getSampleStyleSheet()
             material_clean = self.remove_markdown(material['material'])
             purpose_clean = self.remove_markdown(material['purpose'])
             material_clean = '\n'.join(self.split_into_chunks(material_clean, 56))
             purpose_clean = '\n'.join(self.split_into_chunks(purpose_clean, 56))
-            table_data.append([material_clean, purpose_clean])
+            table_data.append([
+                Paragraph(material_clean, styles['Normal']),
+                Paragraph(purpose_clean, styles['Normal'])])
+            
         table = Table(table_data, colWidths=[280,280])
         table.setStyle(TableStyle([
             ('BACKGROUND', (0, 0), (-1, 0), colors.grey),
