@@ -364,6 +364,8 @@ class PDFGenerator:
                 ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
                 ('BACKGROUND', (0, 1), (-1, -1), colors.beige),
                 ('GRID', (0, 0), (-1, -1), 1, colors.black),
+                ('WORDWRAP', (0, 0), (-1, -1)),
+                
             ]))
             table.wrapOn(c, 40, y_position)
             table_height = table._height
@@ -395,6 +397,7 @@ class PDFGenerator:
             ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
             ('BACKGROUND', (0, 1), (-1, -1), colors.beige),
             ('GRID', (0, 0), (-1, -1), 1, colors.black),
+            ('WORDWRAP', (0, 0), (-1, -1)),  # Enable word wrap
         ]))
         table.wrapOn(c, 40, y_position)
         table_height = table._height
