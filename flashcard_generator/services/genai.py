@@ -44,11 +44,11 @@ class GeminiProcessor:
         return chain.run(documents)
     
     def count_total_tokens(self, docs: list):
-        temp_model = GenerativeModel("gemini-1.0-pro",)
+        #temp_model = GenerativeModel("gemini-1.0-pro",)
         total = 0
-        logger.info("Counting total billable characters...")
-        for doc in tqdm(docs):
-            total += temp_model.count_tokens(doc.page_content).total_billable_characters
+        #logger.info("Counting total billable characters...")
+        #for doc in tqdm(docs):
+        #    total += temp_model.count_tokens(doc.page_content).total_billable_characters
         return total
         
     
@@ -65,9 +65,13 @@ class YoutubeProcessor:
         )
         self.GeminiProcessor = genai_processor
         self.parser = parser
+    
+
+    
     def retrieve_youtube_documents(self, video_url: str, verbose = False):
         loader = YoutubeLoader.from_youtube_url(video_url, add_video_info=True)
         docs = loader.load()
+        docs = "The sun dipped below the horizon, casting a warm, amber glow across the fields. The air was filled with the gentle rustling of leaves and the distant hum of crickets beginning their nightly song. A faint breeze carried the scent of wildflowers, mingling with the earthy aroma of freshly tilled soil. In the distance, a lone farmhouse stood silhouetted against the fading light, its windows glowing softly like embers in the gathering dusk. A sense of calm settled over the landscape, as if nature itself was breathing a sigh of relief, savoring the quiet moments before the stars would begin their nightly dance across the sky."
         result = self.text_splitter.split_documents(docs)
         print(result[:2])
         author = result[0].metadata['author']
