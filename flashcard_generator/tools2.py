@@ -153,7 +153,7 @@ class YoutubeProcessor:
             group_content = ""
             
             for doc in group:
-                group_content += doc.page_content
+                group_content += doc #.page_content
             
             # Prompt for finding concepts 
             prompt2 = PromptTemplate(
