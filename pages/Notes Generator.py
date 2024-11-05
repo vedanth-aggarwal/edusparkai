@@ -16,9 +16,9 @@ st.write("Generate notes from an uploaded file or URL with customized PDF option
 
 # Input form for the user
 file = st.file_uploader("Upload a File")
-file_url = st.text_input("Enter File URL (optional)")
-orientation = st.selectbox("Select Page Orientation", ["portrait", "landscape"], index=0)
-columns = st.selectbox("Select Number of Columns", [1, 2], index=0)
+#file_url = st.text_input("Enter File URL (optional)")
+#orientation = st.selectbox("Select Page Orientation", ["portrait", "landscape"], index=0)
+#columns = st.selectbox("Select Number of Columns", [1, 2], index=0)
 
 if st.button("Generate Notes"):
     try:
@@ -31,8 +31,6 @@ if st.button("Generate Notes"):
         notes_generator = NotesGenerator(
                 model='llama-3.1-70b-versatile',
                 notes_content=saved_file_path,
-                orientation=orientation,
-                columns=columns
             )
 
             # Run the notes generation process
@@ -40,7 +38,7 @@ if st.button("Generate Notes"):
 
             # Display results
         st.success("Notes generated successfully.")
-        st.json(result)
+        st.write(result)
 
     except ValueError as ve:
         st.error(f"Validation error: {ve}")

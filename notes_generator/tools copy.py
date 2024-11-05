@@ -118,6 +118,44 @@ class NotesGenerator:
             return self.extract_text_from_pptx(file_content)
         else:
             raise Exception(f"Unsupported file type: {content_type}. Unable to extract content.")
+        
+    def generate_notes_pdf(self, response):
+        output_filename = "generated_notes.pdf"
+        page_size = landscape(letter) if self.orientation == 'landscape' else letter
+        styles = getSampleStyleSheet()
+
+        # Create PDF template
+        if self.columns == 2:
+            # Define two-column layout
+            frame1 = Frame(inch, inch, (page_size[0] / 2) - 2 * inch, page_size[1] - 2 * inch, id='col1')
+            frame2 = Frame((page_size[0] / 2) + inch, inch, (page_size[0] / 2) - 2 * inch, page_size[1] - 2 * inch, id='col2')
+            template = PageTemplate(frames=[frame1, frame2])
+        else:
+            # Define single-column layout
+            frame = Frame(inch, inch, page_size[0] - 2 * inch, page_size[1] - 2 * inch, id='single_col')
+            template = PageTemplate(frames=[frame])
+
+        # Set up the PDF document
+        doc = BaseDocTemplate(output_filename, pagesize=page_size)
+        doc.addPageTemplates([template])
+
+        # Build the content
+        content = []
+
+        # Add summary
+        summary_text = response.get('summary', 'No summary available.')
+        content.append(Paragraph(f"<b>Summary:</b><br />{summary_text}", styles['Normal']))
+        content.append(Spacer(1, 12))
+
+        # Add outline
+        outline = response.get('outline', [])
+        for item in outline:
+            content.append(Paragraph(item, styles['Bullet']))
+            content.append(Spacer(1, 8))
+
+        # Build the PDF
+        doc.build(content)
+        print(f"Notes generated and saved as {output_filename}")
 
 
     def run(self):
