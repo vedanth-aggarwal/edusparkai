@@ -11,3 +11,4 @@ langchain-groq
 reportlab
 bs4
 langchain-community
+pytube
