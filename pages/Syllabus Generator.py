@@ -14,9 +14,9 @@ st.write("Generate a syllabus, download it as a PDF/Word document, and view rela
 with st.form("syllabus_form"):
     grade = st.text_input("Enter Grade", placeholder="e.g., 5th Grade")
     subject = st.text_input("Enter Subject", placeholder="e.g., Mathematics")
-    syllabus_type = st.text_input("Enter Syllabus Type", placeholder="e.g., Detailed")
-    instructions = st.text_area("Enter Instructions (optional)", placeholder="e.g., Special topics to include")
-    file = st.file_uploader("Upload a File (optional)")
+    syllabus_type = st.text_input("Enter Syllabus Type", placeholder="e.g., exam-based, project based learning, etc.")
+    instructions = st.text_area("Enter Instructions", placeholder="e.g., Special topics to include and detailed info")
+    #file = st.file_uploader("Upload a File (optional)")
     output_type = st.selectbox("Select Output Type", ["", "pdf", "word"], index=0)
 
     # Submit button
@@ -39,13 +39,13 @@ if submitted:
                 instructions=instructions,
             )
             result = Syllabus_Generator.run()
-            with st.expander("📜 Course Description"):
+            with st.expander("Course Description"):
                 st.write(result['course_description'])
-            with st.expander("📜 Course Objectives"):
+            with st.expander("Course Objectives"):
                 st.write('\n'.join(result['course_objectives']))
             study_materials = ""
             for i in result['study_materials']:
-                study_materials += i['material']
+                study_materials = study_materials + f"**{i['material']}**"
                 study_materials += "\n  ->"
                 study_materials += i['purpose']
                 study_materials += "\n\n"
@@ -54,18 +54,16 @@ if submitted:
 
             course_outline = ""
             for i in result['course_outline']:
-                course_outline += str(i['duration'])
+                course_outline = course_outline + f"**{i['duration']}**"
                 course_outline += "\n\n  "
-                course_outline += i['topic']
+                course_outline = course_outline + f"**{i['topic']}**"
                 course_outline += "\n\n  "
                 course_outline += i['subtopics'][0]
             with st.expander("Course Outline"):
                 st.write(course_outline)
             grading_policy = ""
             for i in result['grading_policy']:
-                grading_policy += i['Component']
-                grading_policy += '\n\n  '
-                grading_policy += str(i['Coefficient'])
+                grading_policy += f"**{i['Component']}** ({i['Coefficient']})"
                 grading_policy += '\n\n  '
                 grading_policy += i['Note']
             with st.expander("Grading Policy"):
@@ -77,7 +75,7 @@ if submitted:
                 rules += "\n  \n  "
             with st.expander("Rules"):
                 st.write(rules)
-
+            st.json(result)
             #st.json(result)
 
             # # Handle specific output types: PDF or Word document

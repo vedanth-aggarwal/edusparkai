@@ -26,7 +26,7 @@ if submitted:
 
             # Call the Agent_executor with the input
             result = gen.run()
-            st.json(result)
+            #st.json(result)
             for keys in result:
                 try:
                     text = ""
