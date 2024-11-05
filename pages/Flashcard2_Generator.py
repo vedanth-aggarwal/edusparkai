@@ -43,7 +43,7 @@ def main():
         yt_processor = YoutubeProcessor(processor,parser)
         #option = st.radio("Choose your task:", ("Generate Summary", "Generate Quiz"))    
 
-        result = processor.retrieve_youtube_documents(transcript, verbose=False)
+        result = yt_processor.retrieve_youtube_documents(transcript, verbose=False)
     
         #summary = genai_processor.generate_document_summary(result, verbose=True)
         
