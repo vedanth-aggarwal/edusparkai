@@ -31,6 +31,7 @@ def main():
             # Extract the video ID from the YouTube URL
             with st.spinner("Extracting video ID..."):
                 yt_converter = youtube_converter(youtube_url)
+                st.success(youtube_url)
                 transcript = yt_converter.display_transcript()
             
 
