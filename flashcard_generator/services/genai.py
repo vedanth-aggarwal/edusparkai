@@ -1,7 +1,6 @@
 from langchain_community.document_loaders import YoutubeLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
-from langchain_google_vertexai import VertexAI
-from vertexai.generative_models import GenerativeModel
+
 from langchain.chains.summarize import load_summarize_chain
 from langchain.prompts import PromptTemplate
 from langchain_groq import ChatGroq
