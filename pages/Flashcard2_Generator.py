@@ -5,6 +5,10 @@ import streamlit as st
 #from audio_converter.yt_converter import youtube_converter
 from flashcard_generator.tools2 import youtube_converter,YoutubeProcessor, Processor
 
+from pydantic import BaseModel, HttpUrl, Field
+from typing import Dict
+from langchain_core.output_parsers import JsonOutputParser
+
 class ConceptDefinition(BaseModel):
     concepts: Dict[str, str] = Field(description="A dictionary of key concepts and their definitions")
     #concept: str = Field(description="A key concept found in the text")
@@ -12,9 +16,6 @@ class ConceptDefinition(BaseModel):
 # Set up the parser with the Pydantic model
 parser = JsonOutputParser(pydantic_object=ConceptDefinition)
 
-from pydantic import BaseModel, HttpUrl, Field
-from typing import Dict
-from langchain_core.output_parsers import JsonOutputParser
 
 import os
 os.environ["IMAGEIO_FFMPEG_EXE"] = "/env3/bin/ffmpeg"
