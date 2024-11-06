@@ -465,7 +465,7 @@ class FAISSCollectionCreator:
         # Step 3: Embed the text chunks and create FAISS index
         embeddings = []
         for i, text in enumerate(texts):
-            embedding = self.embed_model.embed_query(text['text'])  # Generate embedding for each chunk
+            embedding = self.embed_model.embed_query(text)  # Generate embedding for each chunk
             embeddings.append(embedding)
             self.document_store[i] = text['text']  # Store the document chunk in document_store
             
