@@ -166,6 +166,7 @@ import streamlit as st
 from langchain_core.documents import Document
 from langchain.text_splitter import CharacterTextSplitter
 from langchain_community.vectorstores import Chroma
+from langchain.vectorstores import FAISS
 
 class ChromaCollectionCreator:
     def __init__(self, processor, embed_model):
@@ -437,6 +438,69 @@ from langchain.text_splitter import CharacterTextSplitter
 class FAISSCollectionCreator:
     def __init__(self, processor, embed_model):
         """
+        Initializes the FAISSCollectionCreator with a DocumentProcessor instance and an embeddings model.
+        :param processor: An instance of DocumentProcessor that has processed documents.
+        :param embed_model: An embedding client for embedding documents.
+        """
+        self.processor = processor
+        self.embed_model = embed_model
+        self.vectorstore = None  # LangChain's FAISS vector store
+        self.document_store = {}  # To store document metadata
+
+    def create_chroma_collection(self):
+        """
+        Creates a FAISS index from the documents processed by the DocumentProcessor instance using LangChain.
+        """
+        # Step 1: Check for processed documents
+        if len(self.processor.pages) == 0:
+            st.error("No documents found!", icon="🚨")
+            return
+
+        # Step 2: Split documents into text chunks
+        splitter = CharacterTextSplitter(separator='\n', chunk_size=1000, chunk_overlap=100)
+        texts = splitter.split_documents(self.processor.pages)
+
+        if texts:
+            st.success(f"Successfully split pages into {len(texts)} documents!", icon="✅")
+
+        # Step 3: Use LangChain FAISS to create index
+        self.vectorstore = FAISS.from_texts(
+            [text.page_content for text in texts], 
+            self.embed_model
+        )
+
+        # Store document metadata
+        for i, text in enumerate(texts):
+            self.document_store[i] = text.page_content
+
+        if self.vectorstore is not None:
+            st.success("Successfully created FAISS Index using LangChain!", icon="✅")
+        else:
+            st.error("Failed to create FAISS Index!", icon="🚨")
+
+    def query_chroma_collection(self, query) -> str:
+        """
+        Queries the created FAISS index for documents similar to the query.
+        :param query: The query string to search for in the FAISS index.
+        
+        Returns the most similar document from the index.
+        """
+        if self.vectorstore:
+            retriever = self.vectorstore.as_retriever()
+            query_results = retriever.get_relevant_documents(query)
+
+            if query_results:
+                similar_doc = query_results[0].page_content
+                st.success("Found a matching document!", icon="✅")
+                return similar_doc
+            else:
+                st.error("No matching documents found!", icon="🚨")
+        else:
+            st.error("FAISS Index has not been created!", icon="🚨")
+
+class FAISSCollectionCreator1:
+    def __init__(self, processor, embed_model):
+        """
         Initializes the FAISSCollectionCreator with a DocumentProcessor instance and embeddings configuration.
         :param processor: An instance of DocumentProcessor that has processed documents.
         :param embed_model: An embedding client for embedding documents.
@@ -468,7 +532,7 @@ class FAISSCollectionCreator:
         for i, text in enumerate(texts):
             embedding = self.embed_model.embed_query(text.page_content)  # Generate embedding for each chunk
             embeddings.append(embedding)
-            st.write(text)
+            #st.write(text)
             self.document_store[i] = text.page_content # Store the document chunk in document_store
             
         # Convert embeddings list to a numpy array
@@ -529,6 +593,7 @@ class QuizGenerator:
         self.num_questions = num_questions
 
         self.vectorstore = vectorstore
+        #self.embeddings = embeddings
         self.llm = None
         self.parser = JsonOutputParser(pydantic_object=QuestionSchema)
         self.question_bank = [] # Initialize the question bank to store questions

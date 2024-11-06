@@ -3,6 +3,8 @@ import os
 import sys
 import json
 import time
+from sentence_transformers import SentenceTransformer
+                    
 #sys.path.append(os.path.abspath('../../'))
 from quizzify.tools2 import DocumentProcessor, EmbeddingClient, ChromaCollectionCreator, QuizGenerator, QuizManager, FAISSCollectionCreator
 # https://www.youtube.com/watch?time_continue=445&v=5l9COMQ3acc&embeds_referring_euri=https%3A%2F%2Fai.radicalai.app%2F&source_ve_path=Mjg2NjMsMjg2NjY&feature=emb_logo
@@ -31,9 +33,10 @@ if __name__ == "__main__":
                 #print(f"Total pages processed: {len(processor.pages)}")
             
                 embed_client = EmbeddingClient('all-MiniLM-L6-v2') 
-            
+                embedding = SentenceTransformer('all-MiniLM-L6-v2')
+
                 #chroma_creator = ChromaCollectionCreator(processor, embed_client)
-                chroma_creator = FAISSCollectionCreator(processor,embed_client )
+                chroma_creator = FAISSCollectionCreator(processor,embedding)
                 ##### YOUR CODE HERE #####
                 # Step 2: Set topic input and number of questions
                 topic_input = st.text_input("Topic for Generative Quiz", placeholder="Enter the topic of the document")
@@ -47,9 +50,11 @@ if __name__ == "__main__":
                         
                     if len(processor.pages) > 0:
                         st.write(f"Generating {questions} questions for topic: {topic_input}")
+
+                    #embedding = SentenceTransformer('all-MiniLM-L6-v2')
                     
                     ##### YOUR CODE HERE #####
-                    generator = QuizGenerator(topic=topic_input, num_questions=questions, vectorstore=chroma_creator.db)
+                    generator = QuizGenerator(topic=topic_input, num_questions=questions, vectorstore=chroma_creator.vectorstore)
                     # Step 3: Initialize a QuizGenerator class using the topic, number of questrions, and the chroma collection
                     question_bank = generator.generate_quiz()
                     # Step 4: Initialize the question bank list in st.session_state
