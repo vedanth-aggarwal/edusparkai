@@ -13,4 +13,5 @@ bs4
 langchain-community
 pytube
 sentence-transformers
+pypdf
 pypdf2
