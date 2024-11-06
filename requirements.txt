@@ -16,3 +16,5 @@ sentence-transformers
 pypdf
 pypdf2
 faiss-cpu
+openai
+langchain-openai
