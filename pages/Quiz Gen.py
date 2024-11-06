@@ -38,9 +38,9 @@ if __name__ == "__main__":
                 topic_input = st.text_input("Topic for Generative Quiz", placeholder="Enter the topic of the document")
                 questions = st.slider("Number of Questions", min_value=1, max_value=10, value=1)
                 ##### YOUR CODE HERE #####
-                submitted = st.form_submit_button("Submit")
+                submitted1 = st.form_submit_button("Submit")
                 
-                if submitted:
+            if submitted1:
                     chroma_creator.create_chroma_collection()
                         
                     if len(processor.pages) > 0:
