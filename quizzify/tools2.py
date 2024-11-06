@@ -458,6 +458,7 @@ class FAISSCollectionCreator:
         # Step 2: Split documents into text chunks
         splitter = CharacterTextSplitter(separator='\n', chunk_size=1000, chunk_overlap=100)
         texts = splitter.split_documents(self.processor.pages)
+
         
         if texts is not None:
             st.success(f"Successfully split pages to {len(texts)} documents!", icon="✅")
@@ -465,7 +466,7 @@ class FAISSCollectionCreator:
         # Step 3: Embed the text chunks and create FAISS index
         embeddings = []
         for i, text in enumerate(texts):
-            embedding = self.embed_model.embed_query(text)  # Generate embedding for each chunk
+            embedding = self.embed_model.embed_query(text.page_content)  # Generate embedding for each chunk
             embeddings.append(embedding)
             st.write(text)
             self.document_store[i] = text.page_content # Store the document chunk in document_store
