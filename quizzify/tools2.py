@@ -467,7 +467,8 @@ class FAISSCollectionCreator:
         for i, text in enumerate(texts):
             embedding = self.embed_model.embed_query(text)  # Generate embedding for each chunk
             embeddings.append(embedding)
-            self.document_store[i] = text['text']  # Store the document chunk in document_store
+            st.write(text)
+            self.document_store[i] = text.page_content # Store the document chunk in document_store
             
         # Convert embeddings list to a numpy array
         embeddings = np.array(embeddings).astype("float32")
