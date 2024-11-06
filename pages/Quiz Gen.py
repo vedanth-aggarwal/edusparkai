@@ -2,6 +2,7 @@ import streamlit as st
 import os
 import sys
 import json
+import time
 #sys.path.append(os.path.abspath('../../'))
 from quizzify.tools2 import DocumentProcessor, EmbeddingClient, ChromaCollectionCreator, QuizGenerator, QuizManager
 # https://www.youtube.com/watch?time_continue=445&v=5l9COMQ3acc&embeds_referring_euri=https%3A%2F%2Fai.radicalai.app%2F&source_ve_path=Mjg2NjMsMjg2NjY&feature=emb_logo
@@ -38,9 +39,10 @@ if __name__ == "__main__":
                 topic_input = st.text_input("Topic for Generative Quiz", placeholder="Enter the topic of the document")
                 questions = st.slider("Number of Questions", min_value=1, max_value=10, value=1)
                 ##### YOUR CODE HERE #####
-                user_choice = st.selectbox("Do you want to proceed?", ["No",'Yes'])
-                
-            if user_choice=='Yes':
+                submitted1 = st.form_submit_button("Submit")
+            
+            time.sleep(15)
+            if True:
                     chroma_creator.create_chroma_collection()
                         
                     if len(processor.pages) > 0:
