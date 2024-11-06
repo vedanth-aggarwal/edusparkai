@@ -12,3 +12,4 @@ reportlab
 bs4
 langchain-community
 pytube
+sentence-transformers
