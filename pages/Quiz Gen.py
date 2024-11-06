@@ -36,7 +36,7 @@ if __name__ == "__main__":
                 embedding = SentenceTransformer('all-MiniLM-L6-v2')
 
                 #chroma_creator = ChromaCollectionCreator(processor, embed_client)
-                chroma_creator = FAISSCollectionCreator(processor,embedding)
+                chroma_creator = FAISSCollectionCreator(processor,embed_client)
                 ##### YOUR CODE HERE #####
                 # Step 2: Set topic input and number of questions
                 topic_input = st.text_input("Topic for Generative Quiz", placeholder="Enter the topic of the document")
