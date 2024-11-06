@@ -96,7 +96,8 @@ import streamlit as st
 #from langchain_google_vertexai import VertexAIEmbeddings
 import os
 from sentence_transformers import SentenceTransformer
-
+from langchain.embeddings import OpenAIEmbeddings
+embeddings = OpenAIEmbeddings(api_key='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')
 #os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = r'C:\\Users\\vedan\\OneDrive\Documents\\gemini_quizzify\\mission-quizify\\authentication.json'
 class EmbeddingClient:
     """

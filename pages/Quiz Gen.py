@@ -35,6 +35,10 @@ if __name__ == "__main__":
                 embed_client = EmbeddingClient('all-MiniLM-L6-v2') 
                 embedding = SentenceTransformer('all-MiniLM-L6-v2')
 
+                from langchain.embeddings import OpenAIEmbeddings
+                embed_client = OpenAIEmbeddings(api_key='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')
+
+
                 #chroma_creator = ChromaCollectionCreator(processor, embed_client)
                 chroma_creator = FAISSCollectionCreator(processor,embed_client)
                 ##### YOUR CODE HERE #####
