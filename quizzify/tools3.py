@@ -259,12 +259,146 @@ import sys
 
 # https://www.youtube.com/watch?v=NQWfvhw7OcI&t=678s
 # https://blog.futuresmart.ai/unlocking-the-potential-of-langchain-expression-language-lcel-a-hands-on-guide?showSharer=true
+class QuizGenerator_Draft:
+    def __init__(self, topic=None, num_questions=1, vectorstore=None):
+        """
+        Initializes the QuizGenerator with a required topic, the number of questions for the quiz,
+        and an optional vectorstore for querying related information.
+
+        :param topic: A string representing the required topic of the quiz.
+        :param num_questions: An integer representing the number of questions to generate for the quiz, up to a maximum of 10.
+        :param vectorstore: An optional vectorstore instance (e.g., ChromaDB) to be used for querying information related to the quiz topic.
+        """
+        if not topic:
+            self.topic = "General Knowledge"
+        else:
+            self.topic = topic
+
+        if num_questions > 10:
+            raise ValueError("Number of questions cannot exceed 10.")
+        self.num_questions = num_questions
+
+        self.vectorstore = vectorstore
+        self.llm = None
+        self.system_template = """
+            You are a subject matter expert on the topic: {topic}
+            
+            Follow the instructions to create a quiz question:
+            1. Generate a question based on the topic provided and context as key "question"
+            2. Provide 4 multiple choice answers to the question as a list of key-value pairs "choices"
+            3. Provide the correct answer for the question from the list of answers as key "answer"
+            4. Provide an explanation as to why the answer is correct as key "explanation"
+            
+            You must respond as a JSON object with the following structure:
+            {{
+                "question": "<question>",
+                "choices": [
+                    {{"key": "A", "value": "<choice>"}},
+                    {{"key": "B", "value": "<choice>"}},
+                    {{"key": "C", "value": "<choice>"}},
+                    {{"key": "D", "value": "<choice>"}}
+                ],
+                "answer": "<answer key from choices list>",
+                "explanation": "<explanation as to why the answer is correct>"
+            }}
+            
+            Context: {context}
+            """
+    
+    def init_llm(self):
+        """
+        Task: Initialize the Large Language Model (LLM) for quiz question generation.
+
+        Overview:
+        This method prepares the LLM for generating quiz questions by configuring essential parameters such as the model name, temperature, and maximum output tokens. The LLM will be used later to generate quiz questions based on the provided topic and context retrieved from the vectorstore.
+
+        Steps:
+        1. Set the LLM's model name to "gemini-pro" 
+        2. Configure the 'temperature' parameter to control the randomness of the output. A lower temperature results in more deterministic outputs.
+        3. Specify 'max_output_tokens' to limit the length of the generated text.
+        4. Initialize the LLM with the specified parameters to be ready for generating quiz questions.
+
+        Implementation:
+        - Use the VertexAI class to create an instance of the LLM with the specified configurations.
+        - Assign the created LLM instance to the 'self.llm' attribute for later use in question generation.
+
+        Note: Ensure you have appropriate access or API keys if required by the model or platform.
+        """
+        model_name = 'llama-3.1-70b-versatile'
+        self.llm = ChatGroq(model=model_name,temperature=0.3,api_key="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")
+
+    
+    def generate_question_with_vectorstore(self):
+        """
+        Task: Generate a quiz question using the topic provided and context from the vectorstore.
+
+        Overview:
+        This method leverages the vectorstore to retrieve relevant context for the quiz topic, then utilizes the LLM to generate a structured quiz question in JSON format. The process involves retrieving documents, creating a prompt, and invoking the LLM to generate a question.
+
+        Prerequisites:
+        - Ensure the LLM has been initialized using 'init_llm'.
+        - A vectorstore must be provided and accessible via 'self.vectorstore'.
+
+        Steps:
+        1. Verify the LLM and vectorstore are initialized and available.
+        2. Retrieve relevant documents or context for the quiz topic from the vectorstore.
+        3. Format the retrieved context and the quiz topic into a structured prompt using the system template.
+        4. Invoke the LLM with the formatted prompt to generate a quiz question.
+        5. Return the generated question in the specified JSON structure.
+
+        Implementation:
+        - Utilize 'RunnableParallel' and 'RunnablePassthrough' to create a chain that integrates document retrieval and topic processing.
+        - Format the system template with the topic and retrieved context to create a comprehensive prompt for the LLM.
+        - Use the LLM to generate a quiz question based on the prompt and return the structured response.
+
+        Note: Handle cases where the vectorstore is not provided by raising a ValueError.
+        """
+        ############# YOUR CODE HERE ############
+        # Initialize the LLM from the 'init_llm' method if not already initialized
+        if self.llm == None:
+            self.init_llm()
+        # Raise an error if the vectorstore is not initialized on the class
+        if self.vectorstore == None:
+            st.error("Vectorstore is not initialized!", icon="🚨")
+            raise ValueError("Vectorstore is not initialized")
+        ############# YOUR CODE HERE ############
+        
+        from langchain_core.runnables import RunnablePassthrough, RunnableParallel
+
+        ############# YOUR CODE HERE ############
+        # Enable a Retriever using the as_retriever() method on the VectorStore object
+        # HINT: Use the vectorstore as the retriever initialized on the class
+        retriever = self.vectorstore.db.as_retriever()
+        ############# YOUR CODE HERE ############
+        
+        ############# YOUR CODE HERE ############
+        # Use the system template to create a PromptTemplate
+        # HINT: Use the .from_template method on the PromptTemplate class and pass in the system template
+        prompt = PromptTemplate.from_template(self.system_template)
+        ############# YOUR CODE HERE ############
+        
+        # RunnableParallel allows Retriever to get relevant documents
+        # RunnablePassthrough allows chain.invoke to send self.topic to LLM
+        setup_and_retrieval = RunnableParallel(
+            {"context": retriever, "topic": RunnablePassthrough()}
+        )
+        
+        ############# YOUR CODE HERE ############
+        # Create a chain with the Retriever, PromptTemplate, and LLM
+        # HINT: chain = RETRIEVER | PROMPT | LLM 
+        chain = setup_and_retrieval | prompt | self.llm
+        ############# YOUR CODE HERE ############
+
+        # Invoke the chain with the topic as input
+        response = chain.invoke(self.topic)
+        return response
+    
 
 import streamlit as st
 import os
 import sys
 import json
-#sys.path.append(os.path.abspath('../../'))
+sys.path.append(os.path.abspath('../../'))
 from langchain_core.output_parsers import JsonOutputParser
 from pydantic import BaseModel, Field
 from typing import List
@@ -301,7 +435,6 @@ import faiss
 import numpy as np
 import streamlit as st
 from langchain.text_splitter import CharacterTextSplitter
-from langchain_core.runnables import RunnablePassthrough, RunnableParallel
 
 class FAISSCollectionCreator:
     def __init__(self, processor, embed_model):
@@ -314,7 +447,6 @@ class FAISSCollectionCreator:
         self.embed_model = embed_model
         self.vectorstore = None  # LangChain's FAISS vector store
         self.document_store = {}  # To store document metadata
-        self.retriever = None
 
     def create_chroma_collection(self):
         """
@@ -337,7 +469,6 @@ class FAISSCollectionCreator:
             [text.page_content for text in texts], 
             self.embed_model
         )
-        self.retriever = self.vectorstore.as_retriever()
 
         # Store document metadata
         for i, text in enumerate(texts):
@@ -356,10 +487,86 @@ class FAISSCollectionCreator:
         Returns the most similar document from the index.
         """
         if self.vectorstore:
-            query_results = self.retriever.get_relevant_documents(query)
+            retriever = self.vectorstore.as_retriever()
+            query_results = retriever.get_relevant_documents(query)
 
             if query_results:
                 similar_doc = query_results[0].page_content
+                st.success("Found a matching document!", icon="✅")
+                return similar_doc
+            else:
+                st.error("No matching documents found!", icon="🚨")
+        else:
+            st.error("FAISS Index has not been created!", icon="🚨")
+
+class FAISSCollectionCreator1:
+    def __init__(self, processor, embed_model):
+        """
+        Initializes the FAISSCollectionCreator with a DocumentProcessor instance and embeddings configuration.
+        :param processor: An instance of DocumentProcessor that has processed documents.
+        :param embed_model: An embedding client for embedding documents.
+        """
+        self.processor = processor      # This will hold the DocumentProcessor from Task 3
+        self.embed_model = embed_model  # This will hold the EmbeddingClient from Task 4
+        self.index = None               # FAISS index
+        self.document_store = {}        # Dictionary to store document metadata
+    
+    def create_chroma_collection(self):
+        """
+        Task: Create a FAISS index from the documents processed by the DocumentProcessor instance.
+        """
+        # Step 1: Check for processed documents
+        if len(self.processor.pages) == 0:
+            st.error("No documents found!", icon="🚨")
+            return
+
+        # Step 2: Split documents into text chunks
+        splitter = CharacterTextSplitter(separator='\n', chunk_size=1000, chunk_overlap=100)
+        texts = splitter.split_documents(self.processor.pages)
+
+        
+        if texts is not None:
+            st.success(f"Successfully split pages to {len(texts)} documents!", icon="✅")
+
+        # Step 3: Embed the text chunks and create FAISS index
+        embeddings = []
+        for i, text in enumerate(texts):
+            embedding = self.embed_model.embed_query(text.page_content)  # Generate embedding for each chunk
+            embeddings.append(embedding)
+            #st.write(text)
+            self.document_store[i] = text.page_content # Store the document chunk in document_store
+            
+        # Convert embeddings list to a numpy array
+        embeddings = np.array(embeddings).astype("float32")
+        
+        # Create a FAISS index
+        d = embeddings.shape[1]  # Dimension of embeddings
+        self.index = faiss.IndexFlatL2(d)  # L2 distance index
+        self.index.add(embeddings)  # Add embeddings to the FAISS index
+
+        if self.index.ntotal > 0:
+            st.success("Successfully created FAISS Index!", icon="✅")
+        else:
+            st.error("Failed to create FAISS Index!", icon="🚨")
+
+    def query_chroma_collection(self, query) -> str:
+        """
+        Queries the created FAISS index for documents similar to the query.
+        :param query: The query string to search for in the FAISS index.
+        
+        Returns the most similar document from the index with similarity score.
+        """
+        if self.index is not None and self.index.ntotal > 0:
+            # Get embedding for the query
+            query_embedding = self.embed_model.embed_query(query)
+            query_embedding = np.array(query_embedding).astype("float32").reshape(1, -1)
+            
+            # Perform similarity search
+            D, I = self.index.search(query_embedding, k=1)  # Search for the nearest neighbor
+            
+            if I[0][0] != -1:
+                # Return the most similar document from document_store
+                similar_doc = self.document_store[I[0][0]]
                 st.success("Found a matching document!", icon="✅")
                 return similar_doc
             else:
@@ -430,9 +637,10 @@ class QuizGenerator:
         if not self.vectorstore:
             raise ValueError("Vectorstore not provided.")
         
+        from langchain_core.runnables import RunnablePassthrough, RunnableParallel
 
         # Enable a Retriever
-        retriever = self.vectorstore #.as_retriever()
+        retriever = self.vectorstore.as_retriever()
         
         # Use the system template to create a PromptTemplate
         prompt = PromptTemplate(

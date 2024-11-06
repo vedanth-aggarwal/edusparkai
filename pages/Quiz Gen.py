@@ -36,7 +36,7 @@ if __name__ == "__main__":
                 embedding = SentenceTransformer('all-MiniLM-L6-v2')
 
                 #chroma_creator = ChromaCollectionCreator(processor, embed_client)
-                chroma_creator = FAISSCollectionCreator(processor,embed_client)
+                chroma_creator = FAISSCollectionCreator(processor,embedding)
                 ##### YOUR CODE HERE #####
                 # Step 2: Set topic input and number of questions
                 topic_input = st.text_input("Topic for Generative Quiz", placeholder="Enter the topic of the document")
@@ -54,7 +54,7 @@ if __name__ == "__main__":
                     #embedding = SentenceTransformer('all-MiniLM-L6-v2')
                     
                     ##### YOUR CODE HERE #####
-                    generator = QuizGenerator(topic=topic_input, num_questions=questions, vectorstore=chroma_creator.vectorstore)
+                    generator = QuizGenerator(topic=topic_input, num_questions=questions, vectorstore=chroma_creator.retriever)
                     # Step 3: Initialize a QuizGenerator class using the topic, number of questrions, and the chroma collection
                     question_bank = generator.generate_quiz()
                     # Step 4: Initialize the question bank list in st.session_state
