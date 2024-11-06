@@ -38,7 +38,7 @@ if __name__ == "__main__":
                 topic_input = st.text_input("Topic for Generative Quiz", placeholder="Enter the topic of the document")
                 questions = st.slider("Number of Questions", min_value=1, max_value=10, value=1)
                 ##### YOUR CODE HERE #####
-                user_choice = st.selectbox("Do you want to proceed?", ["Yes", "No"])
+                user_choice = st.selectbox("Do you want to proceed?", ["No",'Yes'])
                 
             if user_choice=='Yes':
                     chroma_creator.create_chroma_collection()
