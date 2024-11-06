@@ -4,7 +4,12 @@ import sys
 import json
 import time
 from sentence_transformers import SentenceTransformer
-                    
+from dotenv import load_dotenv
+import os
+# Load environment variables from the .env file
+load_dotenv()
+# Access the environment variables
+openai_api_key = os.getenv("API_KEY")      
 #sys.path.append(os.path.abspath('../../'))
 from quizzify.tools2 import DocumentProcessor, EmbeddingClient, ChromaCollectionCreator, QuizGenerator, QuizManager, FAISSCollectionCreator
 # https://www.youtube.com/watch?time_continue=445&v=5l9COMQ3acc&embeds_referring_euri=https%3A%2F%2Fai.radicalai.app%2F&source_ve_path=Mjg2NjMsMjg2NjY&feature=emb_logo
@@ -32,11 +37,11 @@ if __name__ == "__main__":
                 processor.ingest_documents()
                 #print(f"Total pages processed: {len(processor.pages)}")
             
-                embed_client = EmbeddingClient('all-MiniLM-L6-v2') 
-                embedding = SentenceTransformer('all-MiniLM-L6-v2')
+                #embed_client = EmbeddingClient('all-MiniLM-L6-v2') 
+                #embedding = SentenceTransformer('all-MiniLM-L6-v2')
 
                 from langchain.embeddings import OpenAIEmbeddings
-                embed_client = OpenAIEmbeddings(api_key='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')
+                embed_client = OpenAIEmbeddings(api_key=openai_api_key)
 
 
                 #chroma_creator = ChromaCollectionCreator(processor, embed_client)
