@@ -40,8 +40,8 @@ if __name__ == "__main__":
                 #embed_client = EmbeddingClient('all-MiniLM-L6-v2') 
                 #embedding = SentenceTransformer('all-MiniLM-L6-v2')
 
-                #from langchain.embeddings import OpenAIEmbeddings
-                #embed_client = OpenAIEmbeddings(api_key=openai_api_key)
+                from langchain.embeddings import OpenAIEmbeddings
+                embed_client = OpenAIEmbeddings(api_key=openai_api_key)
 
 
                 #chroma_creator = ChromaCollectionCreator(processor, embed_client)
