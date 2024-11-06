@@ -15,4 +15,4 @@ pytube
 sentence-transformers
 pypdf
 pypdf2
-faiss
+faiss-cpu
