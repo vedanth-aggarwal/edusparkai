@@ -446,7 +446,7 @@ class FAISSCollectionCreator:
         self.index = None               # FAISS index
         self.document_store = {}        # Dictionary to store document metadata
     
-    def create_faiss_index(self):
+    def create_chroma_collection(self):
         """
         Task: Create a FAISS index from the documents processed by the DocumentProcessor instance.
         """
@@ -482,7 +482,7 @@ class FAISSCollectionCreator:
         else:
             st.error("Failed to create FAISS Index!", icon="🚨")
 
-    def query_faiss_index(self, query) -> str:
+    def query_chroma_collection(self, query) -> str:
         """
         Queries the created FAISS index for documents similar to the query.
         :param query: The query string to search for in the FAISS index.
