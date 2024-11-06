@@ -4,7 +4,7 @@ import sys
 import json
 import time
 #sys.path.append(os.path.abspath('../../'))
-from quizzify.tools2 import DocumentProcessor, EmbeddingClient, ChromaCollectionCreator, QuizGenerator, QuizManager
+from quizzify.tools2 import DocumentProcessor, EmbeddingClient, ChromaCollectionCreator, QuizGenerator, QuizManager, FAISSCollectionCreator
 # https://www.youtube.com/watch?time_continue=445&v=5l9COMQ3acc&embeds_referring_euri=https%3A%2F%2Fai.radicalai.app%2F&source_ve_path=Mjg2NjMsMjg2NjY&feature=emb_logo
 if __name__ == "__main__":
     
@@ -32,8 +32,8 @@ if __name__ == "__main__":
             
                 embed_client = EmbeddingClient('all-MiniLM-L6-v2') 
             
-                chroma_creator = ChromaCollectionCreator(processor, embed_client)
-                
+                #chroma_creator = ChromaCollectionCreator(processor, embed_client)
+                chroma_creator = FAISSCollectionCreator(processor,embed_client )
                 ##### YOUR CODE HERE #####
                 # Step 2: Set topic input and number of questions
                 topic_input = st.text_input("Topic for Generative Quiz", placeholder="Enter the topic of the document")

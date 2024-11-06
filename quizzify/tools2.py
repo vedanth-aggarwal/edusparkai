@@ -6,6 +6,11 @@ from langchain_community.document_loaders import PyPDFLoader
 import os
 import tempfile
 import uuid
+import faiss
+import numpy as np
+import streamlit as st
+from langchain.text_splitter import CharacterTextSplitter
+
 #os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = r'C:\\Users\\vedan\\OneDrive\Documents\\gemini_quizzify\\mission-quizify\\authentication.json'
 
 class DocumentProcessor:
@@ -423,6 +428,84 @@ class QuestionSchema(BaseModel):
           """
         }
       }
+
+import faiss
+import numpy as np
+import streamlit as st
+from langchain.text_splitter import CharacterTextSplitter
+
+class FAISSCollectionCreator:
+    def __init__(self, processor, embed_model):
+        """
+        Initializes the FAISSCollectionCreator with a DocumentProcessor instance and embeddings configuration.
+        :param processor: An instance of DocumentProcessor that has processed documents.
+        :param embed_model: An embedding client for embedding documents.
+        """
+        self.processor = processor      # This will hold the DocumentProcessor from Task 3
+        self.embed_model = embed_model  # This will hold the EmbeddingClient from Task 4
+        self.index = None               # FAISS index
+        self.document_store = {}        # Dictionary to store document metadata
+    
+    def create_faiss_index(self):
+        """
+        Task: Create a FAISS index from the documents processed by the DocumentProcessor instance.
+        """
+        # Step 1: Check for processed documents
+        if len(self.processor.pages) == 0:
+            st.error("No documents found!", icon="🚨")
+            return
+
+        # Step 2: Split documents into text chunks
+        splitter = CharacterTextSplitter(separator='\n', chunk_size=1000, chunk_overlap=100)
+        texts = splitter.split_documents(self.processor.pages)
+        
+        if texts is not None:
+            st.success(f"Successfully split pages to {len(texts)} documents!", icon="✅")
+
+        # Step 3: Embed the text chunks and create FAISS index
+        embeddings = []
+        for i, text in enumerate(texts):
+            embedding = self.embed_model.embed_query(text['text'])  # Generate embedding for each chunk
+            embeddings.append(embedding)
+            self.document_store[i] = text['text']  # Store the document chunk in document_store
+            
+        # Convert embeddings list to a numpy array
+        embeddings = np.array(embeddings).astype("float32")
+        
+        # Create a FAISS index
+        d = embeddings.shape[1]  # Dimension of embeddings
+        self.index = faiss.IndexFlatL2(d)  # L2 distance index
+        self.index.add(embeddings)  # Add embeddings to the FAISS index
+
+        if self.index.ntotal > 0:
+            st.success("Successfully created FAISS Index!", icon="✅")
+        else:
+            st.error("Failed to create FAISS Index!", icon="🚨")
+
+    def query_faiss_index(self, query) -> str:
+        """
+        Queries the created FAISS index for documents similar to the query.
+        :param query: The query string to search for in the FAISS index.
+        
+        Returns the most similar document from the index with similarity score.
+        """
+        if self.index is not None and self.index.ntotal > 0:
+            # Get embedding for the query
+            query_embedding = self.embed_model.embed_query(query)
+            query_embedding = np.array(query_embedding).astype("float32").reshape(1, -1)
+            
+            # Perform similarity search
+            D, I = self.index.search(query_embedding, k=1)  # Search for the nearest neighbor
+            
+            if I[0][0] != -1:
+                # Return the most similar document from document_store
+                similar_doc = self.document_store[I[0][0]]
+                st.success("Found a matching document!", icon="✅")
+                return similar_doc
+            else:
+                st.error("No matching documents found!", icon="🚨")
+        else:
+            st.error("FAISS Index has not been created!", icon="🚨")
 
 class QuizGenerator:
     def __init__(self, topic=None, num_questions=1, vectorstore=None):
