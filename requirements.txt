@@ -14,5 +14,5 @@ langchain-community
 pytube
 sentence-transformers
 pypdf
-chromadab
+chromadab==0.5.18
 pypdf2
