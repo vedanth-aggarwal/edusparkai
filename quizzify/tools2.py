@@ -440,6 +440,7 @@ class QuizGenerator:
             partial_variables={"format_instructions": self.parser.get_format_instructions()},
         )
         
+        st.success('GEN QUIZ CHECKPOINT')
         # RunnableParallel allows Retriever to get relevant documents
         # RunnablePassthrough allows chain.invoke to send self.topic to LLM
         setup_and_retrieval = RunnableParallel(
