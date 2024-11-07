@@ -44,7 +44,7 @@ if __name__ == "__main__":
 
                 from langchain_openai import OpenAIEmbeddings
 
-                embeddings = OpenAIEmbeddings(api_key=openai_api_key,
+                embed_client = OpenAIEmbeddings(api_key=openai_api_key,
                                               model="text-embedding-3-large")
                 #embed_client = OpenAIEmbeddings(api_key=openai_api_key)
 
