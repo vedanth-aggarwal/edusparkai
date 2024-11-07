@@ -9,7 +9,9 @@ import os
 # Load environment variables from the .env file
 load_dotenv()
 # Access the environment variables
-openai_api_key = os.getenv("API_KEY")      
+openai_api_key = "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" #os.getenv("API_KEY")      
+
+
 #sys.path.append(os.path.abspath('../../'))
 from quizzify.tools2 import DocumentProcessor, EmbeddingClient, ChromaCollectionCreator, QuizGenerator, QuizManager, FAISSCollectionCreator
 # https://www.youtube.com/watch?time_continue=445&v=5l9COMQ3acc&embeds_referring_euri=https%3A%2F%2Fai.radicalai.app%2F&source_ve_path=Mjg2NjMsMjg2NjY&feature=emb_logo
