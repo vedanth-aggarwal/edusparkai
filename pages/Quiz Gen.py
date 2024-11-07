@@ -39,13 +39,19 @@ if __name__ == "__main__":
                 processor.ingest_documents()
                 #print(f"Total pages processed: {len(processor.pages)}")
             
-                #embed_client = EmbeddingClient('all-MiniLM-L6-v2') 
+                embed_client = EmbeddingClient('all-MiniLM-L6-v2') 
                 embed_client = SentenceTransformer('all-MiniLM-L6-v2')
 
-                from langchain_openai import OpenAIEmbeddings
+                from langchain_ollama import OllamaEmbeddings
 
-                embed_client = OpenAIEmbeddings(api_key=openai_api_key,
-                                              model="text-embedding-3-large")
+                embed_client = OllamaEmbeddings(
+                    model="llama3",
+                )
+
+                #from langchain_openai import OpenAIEmbeddings
+
+                #embed_client = OpenAIEmbeddings(api_key=openai_api_key,
+                #                              model="text-embedding-3-large")
                 #embed_client = OpenAIEmbeddings(api_key=openai_api_key)
 
 
