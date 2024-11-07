@@ -43,7 +43,7 @@ if __name__ == "__main__":
                 embed_client = SentenceTransformer('all-MiniLM-L6-v2')
 
                 from langchain_community.embeddings import OpenAIEmbeddings
-                embed_client = OpenAIEmbeddings(api_key=openai_api_key)
+                #embed_client = OpenAIEmbeddings(api_key=openai_api_key)
 
 
                 #chroma_creator = ChromaCollectionCreator(processor, embed_client)
