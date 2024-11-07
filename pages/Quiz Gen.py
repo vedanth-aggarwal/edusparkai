@@ -9,7 +9,7 @@ import os
 # Load environment variables from the .env file
 load_dotenv()
 # Access the environment variables
-penai_api_key = "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" #os.getenv("API_KEY")      
+openai_api_key = "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" #os.getenv("API_KEY")      
 
 
 #sys.path.append(os.path.abspath('../../'))
