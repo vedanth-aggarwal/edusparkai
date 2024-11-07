@@ -45,7 +45,7 @@ if __name__ == "__main__":
                 from langchain_ollama import OllamaEmbeddings
 
                 embed_client = OllamaEmbeddings(
-                    model="llama3",
+                    model="nomic-embed-text",
                 )
 
                 #from langchain_openai import OpenAIEmbeddings
