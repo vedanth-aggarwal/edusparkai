@@ -9,7 +9,7 @@ import os
 # Load environment variables from the .env file
 load_dotenv()
 # Access the environment variables
-openai_api_key = "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" #os.getenv("API_KEY")      
+penai_api_key = "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" #os.getenv("API_KEY")      
 
 
 #sys.path.append(os.path.abspath('../../'))
@@ -40,9 +40,9 @@ if __name__ == "__main__":
                 #print(f"Total pages processed: {len(processor.pages)}")
             
                 #embed_client = EmbeddingClient('all-MiniLM-L6-v2') 
-                #embedding = SentenceTransformer('all-MiniLM-L6-v2')
+                embed_client = SentenceTransformer('all-MiniLM-L6-v2')
 
-                from langchain.embeddings import OpenAIEmbeddings
+                from langchain_community.embeddings import OpenAIEmbeddings
                 embed_client = OpenAIEmbeddings(api_key=openai_api_key)
 
 
