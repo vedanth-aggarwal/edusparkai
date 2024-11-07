@@ -42,7 +42,10 @@ if __name__ == "__main__":
                 #embed_client = EmbeddingClient('all-MiniLM-L6-v2') 
                 embed_client = SentenceTransformer('all-MiniLM-L6-v2')
 
-                from langchain_community.embeddings import OpenAIEmbeddings
+                from langchain_openai import OpenAIEmbeddings
+
+                embeddings = OpenAIEmbeddings(api_key=openai_api_key,
+                                              model="text-embedding-3-large")
                 #embed_client = OpenAIEmbeddings(api_key=openai_api_key)
 
 
