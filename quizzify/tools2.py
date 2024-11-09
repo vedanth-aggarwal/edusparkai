@@ -166,7 +166,7 @@ import streamlit as st
 from langchain_core.documents import Document
 from langchain.text_splitter import CharacterTextSplitter
 from langchain_community.vectorstores import Chroma
-from langchain.vectorstores import FAISS
+from langchain_community.vectorstores import FAISS
 
 class ChromaCollectionCreator:
     def __init__(self, processor, embed_model):
