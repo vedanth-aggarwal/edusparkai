@@ -336,6 +336,7 @@ class FAISSCollectionCreator:
             [text.page_content for text in texts], 
             self.embed_model
         )
+        
         self.retriever = self.vectorstore.as_retriever()
 
         # Store document metadata

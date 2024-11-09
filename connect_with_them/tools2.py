@@ -4,7 +4,7 @@ class youtube_converter:
     @staticmethod
     def extract_video_id(url):
         # Extract the video ID from various possible YouTube URL formats
-        if "youtube/" in url:
+        if "youtube" in url:
             return url.split('/')[-1]
         elif "v=" in url:
             return url.split("v=")[-1].split("&")[0]
